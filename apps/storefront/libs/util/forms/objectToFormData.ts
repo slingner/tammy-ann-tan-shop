@@ -13,7 +13,7 @@ export const convertToFormData = (data: any, formData: FormData = new FormData()
       convertToFormData(
         value,
         formData,
-        !parentKey ? key : data[key] instanceof File ? parentKey : `${parentKey}[${key}]`,
+        !parentKey ? key : data[key] instanceof File ? parentKey : `${parentKey}.${key}`,
       );
     });
     return formData;
@@ -21,7 +21,7 @@ export const convertToFormData = (data: any, formData: FormData = new FormData()
 
   if (Array.isArray(data)) {
     data.forEach((value, index) => {
-      convertToFormData(value, formData, `${parentKey}[${index}]`);
+      convertToFormData(value, formData, `${parentKey}.${index}`);
     });
     return formData;
   }

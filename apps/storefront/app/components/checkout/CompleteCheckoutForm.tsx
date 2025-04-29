@@ -6,7 +6,7 @@ import { CheckoutAction, UpdatePaymentInput, UpdateBillingAddressInput } from '@
 import { useFormContext } from 'remix-validated-form';
 import { CheckoutOrderSummary, checkoutPaymentValidator } from '.';
 import isEqual from 'lodash/isEqual';
-import { SubmitButton } from '@app/components/common/buttons/SubmitButton';
+import { OldSubmitButton } from '@app/components/common/buttons/SubmitButton';
 import { Form } from '@app/components/common/forms/Form';
 import { FieldGroup } from '@app/components/common/forms/fields/FieldGroup';
 import { FieldCheckbox } from '@app/components/common/forms/fields/FieldCheckbox';
@@ -119,13 +119,13 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
   };
 
   const PaymentSubmitButton = () => (
-    <SubmitButton
+    <OldSubmitButton
       form={id}
       className="w-full lg:w-auto"
       disabled={isSubmitting || isCheckoutLoading || (!sameAsShipping && !newBillingAddress.completed)}
     >
       {isSubmitting ? 'Confirming...' : (submitMessage ?? 'Confirm & Pay')}
-    </SubmitButton>
+    </OldSubmitButton>
   );
 
   if (!activePaymentSession) return null;

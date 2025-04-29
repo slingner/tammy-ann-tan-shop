@@ -1,6 +1,6 @@
 import { Actions } from '@app/components/common/actions/Actions';
 import { Button } from '@app/components/common/buttons/Button';
-import { SubmitButton } from '@app/components/common/buttons/SubmitButton';
+import { OldSubmitButton } from '@app/components/common/buttons/SubmitButton';
 import { Form } from '@app/components/common/forms/Form';
 import { FormError } from '@app/components/common/forms/FormError';
 import { FieldGroup } from '@app/components/common/forms/fields/FieldGroup';
@@ -31,6 +31,7 @@ import type { MedusaAddress } from '@libs/types';
 import { medusaAddressToAddress } from '@libs/util';
 
 const NEW_SHIPPING_ADDRESS_ID = 'new';
+
 export const CheckoutAccountDetails = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const checkoutContactInfoFormFetcher = useFetcher<{}>();
@@ -179,11 +180,11 @@ export const CheckoutAccountDetails = () => {
             <FormError />
 
             <Actions>
-              <SubmitButton
+              <OldSubmitButton
                 disabled={isSubmitting || (!stripeShippingAddress.completed && initialShippingAddressId === 'new')}
               >
                 {isSubmitting ? 'Saving...' : 'Save and continue'}
-              </SubmitButton>
+              </OldSubmitButton>
 
               {isComplete && (
                 <Button disabled={isSubmitting} onClick={handleCancel}>

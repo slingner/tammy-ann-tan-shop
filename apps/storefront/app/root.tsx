@@ -52,6 +52,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   nextParams,
   nextUrl,
 }) => {
+  if (nextUrl.pathname.startsWith('/checkout/success')) return true;
   if (!formMethod || formMethod === 'GET') return false;
 
   return defaultShouldRevalidate;

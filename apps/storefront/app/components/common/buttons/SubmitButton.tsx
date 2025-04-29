@@ -4,7 +4,7 @@ import { Button, ButtonProps } from './Button';
 
 export interface SubmitButtonProps extends ButtonProps {}
 
-export const SubmitButton: FC<SubmitButtonProps> = ({ children, ...props }) => {
+export const OldSubmitButton: FC<SubmitButtonProps> = ({ children, ...props }) => {
   const isSubmitting = useIsSubmitting(props.form);
 
   return (

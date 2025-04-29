@@ -1,13 +1,12 @@
-import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
-import { ProductTemplate } from '@app/templates/ProductTemplate';
-import { getMergedProductMeta } from '@libs/util/products';
-import { fetchProducts } from '@libs/util/server/products.server';
-import { fetchProductReviews, fetchProductReviewStats } from '@libs/util/server/data/product-reviews.server';
-import { StoreListProductReviewsResponse, StoreListProductReviewStatsResponse } from '@lambdacurry/medusa-plugins-sdk';
 import { ProductReviewSection } from '@app/components/reviews/ProductReviewSection';
 import ProductList from '@app/components/sections/ProductList';
+import { ProductTemplate } from '@app/templates/ProductTemplate';
+import { getMergedProductMeta } from '@libs/util/products';
+import { fetchProductReviewStats, fetchProductReviews } from '@libs/util/server/data/product-reviews.server';
+import { fetchProducts } from '@libs/util/server/products.server';
 import { withPaginationParams } from '@libs/util/withPaginationParams';
+import { type LoaderFunctionArgs, type MetaFunction, redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const { limit: reviewsLimit, offset: reviewsOffset } = withPaginationParams({

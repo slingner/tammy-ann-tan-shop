@@ -47,7 +47,6 @@ export interface UpdateAccountDetailsInput {
   customerId?: string;
   email: string;
   shippingAddress: Address;
-  shippingAddressId: string;
   isExpressCheckout?: boolean;
 }
 

@@ -8,7 +8,7 @@ import { Form } from '@app/components/common/forms/Form';
 import { FieldLabel } from '@app/components/common/forms/fields/FieldLabel';
 import { FieldGroup } from '@app/components/common/forms/fields/FieldGroup';
 import { FieldText } from '@app/components/common/forms/fields/FieldText';
-import { SubmitButton } from '@app/components/common/buttons/SubmitButton';
+import { OldSubmitButton } from '@app/components/common/buttons/SubmitButton';
 import { FormError } from '@app/components/common/forms/FormError';
 import { HttpTypes, PromotionDTO } from '@medusajs/types';
 
@@ -80,9 +80,9 @@ export const CheckoutOrderSummaryDiscountCode: FC<CheckoutOrderSummaryDiscountCo
                 placeholder="Discount code"
                 aria-label="discount code"
               />
-              <SubmitButton className="flex-shrink-0 flex-grow-0">
+              <OldSubmitButton className="flex-shrink-0 flex-grow-0">
                 {isSubmitting ? 'Applying...' : 'Apply'}
-              </SubmitButton>
+              </OldSubmitButton>
             </FieldGroup>
             <FormError className="mb-0" />
           </Form>

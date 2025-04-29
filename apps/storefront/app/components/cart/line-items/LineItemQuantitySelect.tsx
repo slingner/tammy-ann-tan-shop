@@ -1,14 +1,11 @@
-import { QuantitySelector } from '@app/components/common/field-groups/QuantitySelector';
-import { Form } from '@app/components/common/forms/Form';
-import { FetcherWithComponents, useFetcher } from '@remix-run/react';
-import clsx from 'clsx';
-import { ChangeEvent, FC, HTMLAttributes } from 'react';
-import * as Yup from 'yup';
+import { QuantitySelector } from '@app/components/common/remix-hook-form/field-groups/QuantitySelector';
+import { updateLineItemSchema } from '@app/routes/api.cart.line-items.update';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { StoreCartLineItem } from '@medusajs/types';
-
-const lineItemValidation = Yup.object().shape({
-  quantity: Yup.number().required(),
-});
+import { useFetcher } from '@remix-run/react';
+import clsx from 'clsx';
+import { FC, HTMLAttributes } from 'react';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 
 export interface LineItemQuantitySelectProps extends HTMLAttributes<HTMLFormElement> {
   formId: string;
@@ -23,39 +20,39 @@ export const LineItemQuantitySelect: FC<LineItemQuantitySelectProps> = ({
   maxInventory = 10,
   ...props
 }) => {
-  const fetcher = useFetcher<{}>() as FetcherWithComponents<{}>;
+  const fetcher = useFetcher();
   const isLoading = ['submitting', 'loading'].includes(fetcher.state);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const form = useRemixForm({
+    resolver: zodResolver(updateLineItemSchema),
+    defaultValues: {
+      lineItemId: item.id,
+      quantity: item.quantity.toString(),
+    },
+  });
+
+  const handleChange = (quantity: number) => {
     fetcher.submit(
       {
-        subaction: 'updateItem',
         lineItemId: item.id,
-        cartId: item.cart_id,
-        quantity: event.target.value,
+        quantity: quantity,
       },
-      { method: 'post', action: '/api/cart/line-items' },
+      { method: 'post', action: '/api/cart/line-items/update' },
     );
   };
 
   return (
-    <Form
-      id={formId}
-      fetcher={fetcher}
-      className={clsx('line-item-quantity-select', className)}
-      validationSchema={lineItemValidation}
-      defaultValues={{ quantity: item.quantity }}
-      {...props}
-      onSubmit={() => {}}
-    >
-      <QuantitySelector
-        formId={formId}
-        className={clsx({
-          'pointer-events-none opacity-50': isLoading,
-        })}
-        variant={item.variant as any}
-        onChange={handleChange}
-      />
-    </Form>
+    <RemixFormProvider {...form}>
+      <fetcher.Form id={formId} className={clsx('line-item-quantity-select', className)} {...props}>
+        <QuantitySelector
+          formId={formId}
+          className={clsx({
+            'pointer-events-none opacity-50': isLoading,
+          })}
+          variant={item.variant as any}
+          onChange={handleChange}
+        />
+      </fetcher.Form>
+    </RemixFormProvider>
   );
 };

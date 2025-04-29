@@ -1,12 +1,14 @@
 import { Alert } from '@app/components/common/alert';
-import { convertToFormData } from '@libs/util/forms/objectToFormData';
 import { useCheckout } from '@app/hooks/useCheckout';
+import { Address } from '@libs/types';
+import { amountToStripeExpressCheckoutAmount } from '@libs/util/checkout/amountToStripeExpressCheckoutAmount';
+import { expressCheckoutClient } from '@libs/util/checkout/express-checkout-client';
+import { StoreCart, StoreCartShippingOption } from '@medusajs/types';
 import { useNavigate } from '@remix-run/react';
 import { ExpressCheckoutElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import {
   type ClickResolveDetails,
   type PaymentIntentResult,
-  type SetupIntent,
   type ShippingRate,
   type StripeExpressCheckoutElementClickEvent,
   type StripeExpressCheckoutElementConfirmEvent,
@@ -15,21 +17,6 @@ import {
   type StripeExpressCheckoutElementShippingRateChangeEvent,
 } from '@stripe/stripe-js';
 import { type FC, useState } from 'react';
-import {
-  CheckoutAction,
-  UpdateAccountDetailsInput,
-  UpdateExpressCheckoutAddressInput,
-  UpdateExpressCheckoutAddressResponse,
-  type UpdatePaymentInput,
-} from '@app/routes/api.checkout';
-import { StoreCart, StoreCartShippingOption, StoreOrder } from '@medusajs/types';
-import { Address } from '@libs/types';
-import { amountToStripeExpressCheckoutAmount } from '@libs/util/checkout/amountToStripeExpressCheckoutAmount';
-type ExpressCartResponse = {
-  cart: StoreCart;
-  setupIntent: SetupIntent;
-};
-type FieldErrors = { fieldErrors: Record<string, string> };
 
 const mapShippingRates = (shippingOptions: StoreCartShippingOption[]): ShippingRate[] => {
   if (!shippingOptions?.length) return [];
@@ -153,35 +140,21 @@ export const StripeExpressCheckoutForm: FC = () => {
         postalCode: ev.billingDetails?.address?.postal_code ?? '',
         countryCode: ev.billingDetails?.address?.country?.toLowerCase() ?? '',
         phone: ev.billingDetails?.phone ?? '',
-        company: ev.billingDetails?.name ?? null,
+        company: ev.billingDetails?.name ?? '',
       };
 
-      const expressCheckoutForm = convertToFormData({
+      const [updatedCartRes, updateError] = await expressCheckoutClient.update({
         cartId: cart.id,
         email: ev.billingDetails?.email ?? cart.email,
-        shippingAddressId: 'new',
         shippingAddress,
         billingAddress,
-        providerId: 'pp_stripe_stripe',
-        paymentMethodId: 'new',
-        allowSuggestions: false,
-        subaction: CheckoutAction.UPDATE_ACCOUNT_DETAILS,
-      } as UpdateAccountDetailsInput);
-
-      const updatedCartRes = await fetch('/api/checkout', {
-        method: 'post',
-        body: expressCheckoutForm,
-        headers: { Accept: 'application/json' },
+        complete: false,
       });
 
-      const updatedCartParsedUncased = (await updatedCartRes.json()) as FieldErrors | ExpressCartResponse;
-
-      if (updatedCartRes.ok === false) {
-        const { fieldErrors } = updatedCartParsedUncased as FieldErrors;
-
+      if (updateError) {
         setStripeError({
           title: 'Error updating account details',
-          description: Object.values(fieldErrors).join(', '),
+          description: updateError.message,
         });
 
         ev.paymentFailed({
@@ -191,8 +164,8 @@ export const StripeExpressCheckoutForm: FC = () => {
         return;
       }
 
-      const updatedCartParsed = updatedCartParsedUncased as ExpressCartResponse;
-      const updatedCart = updatedCartParsed.cart;
+      const updatedCart = updatedCartRes.cart;
+
       const updatedPaymentSession = updatedCart.payment_collection?.payment_sessions?.find(
         ({ provider_id, status }) => provider_id === 'pp_stripe_stripe' && status === 'pending',
       );
@@ -253,26 +226,17 @@ export const StripeExpressCheckoutForm: FC = () => {
         }
       }
 
-      const checkoutForm = convertToFormData({
+      const [checkoutRes, checkoutError] = await expressCheckoutClient.update({
         cartId: updatedCart.id,
-        email: ev.billingDetails?.email ?? '',
-        sameAsShipping: false,
-        billingAddress,
-        providerId: 'pp_stripe_stripe',
-        paymentMethodId: 'new',
-        subaction: CheckoutAction.COMPLETE_CHECKOUT,
-        noRedirect: true,
-      } as UpdatePaymentInput);
-
-      const checkoutResult = await fetch('/api/checkout', {
-        method: 'post',
-        body: checkoutForm,
-        headers: { Accept: 'application/json' },
+        complete: true,
       });
 
-      const checkoutResultJson = (await checkoutResult.json()) as unknown;
+      if (checkoutError) {
+        console.error(checkoutError);
+        throw new Error('Error trying to complete checkout.');
+      }
 
-      const { order } = checkoutResultJson as { order: StoreOrder };
+      const { order } = checkoutRes;
 
       if (!order) throw new Error('Error trying to complete checkout.');
 
@@ -305,36 +269,25 @@ export const StripeExpressCheckoutForm: FC = () => {
       postalCode: ev.address.postal_code ?? '',
       countryCode: ev.address?.country.toLowerCase() ?? '',
       phone: '',
+      company: '',
     };
 
-    const expressCheckoutForm = convertToFormData({
+    const [updateAddressData, error] = await expressCheckoutClient.update({
       cartId: cart.id,
-      email: cart.email,
+      email: cart.email ?? undefined,
       shippingAddress: medusaAddress,
-      subaction: CheckoutAction.UPDATE_EXPRESS_CHECKOUT_ADDRESS,
-    } as UpdateExpressCheckoutAddressInput);
-
-    const result = await fetch('/api/checkout', {
-      method: 'post',
-      body: expressCheckoutForm,
-      headers: { Accept: 'application/json' },
     });
 
-    const resultJson = (await result.json()) as UpdateExpressCheckoutAddressResponse & FieldErrors;
-
-    if (resultJson.fieldErrors) {
+    if (error) {
       setStripeError({
         title: 'Error updating shipping address',
-        description: Object.values(resultJson.fieldErrors).join(', '),
+        description: error.message,
       });
-
       return ev.reject();
     }
 
-    const { cart: updatedCart, shippingOptions: updatedShippingOptions } = resultJson as {
-      cart: StoreCart;
-      shippingOptions: StoreCartShippingOption[];
-    };
+    const { cart: updatedCart, shippingOptions: updatedShippingOptions } = updateAddressData;
+
     setCart(updatedCart);
 
     const updatedRates = mapShippingRates(updatedShippingOptions);
@@ -393,31 +346,24 @@ export const StripeExpressCheckoutForm: FC = () => {
   };
 
   const updateShippingRate = async (shippingRateId: string) => {
-    try {
-      const result = await fetch('/api/checkout', {
-        method: 'post',
-        headers: { Accept: 'application/json' },
-        body: convertToFormData({
-          cartId: cart.id,
-          shippingOptionIds: [shippingRateId],
-          subaction: CheckoutAction.ADD_SHIPPING_METHODS,
-        }),
-      });
+    const [updateShippingRateData, error] = await expressCheckoutClient.update({
+      cartId: cart.id,
+      shippingOptions: [shippingRateId],
+    });
 
-      const updatedCart = ((await result.json()) as ExpressCartResponse).cart;
-
-      return updatedCart;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Error trying to update shipping.';
-
+    if (error) {
       setStripeError({
-        title: 'Shipping failed',
-        description: errorMessage,
+        title: 'Error updating shipping rate',
+        description: error.message,
       });
-
       return null;
     }
+
+    const { cart: updatedCart } = updateShippingRateData;
+
+    return updatedCart;
   };
+
   return (
     <>
       {(canMakePaymentStatus === 'available' || canMakePaymentStatus === 'first_load') && (

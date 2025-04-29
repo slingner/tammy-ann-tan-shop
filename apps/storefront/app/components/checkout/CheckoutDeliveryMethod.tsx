@@ -51,7 +51,7 @@ export const CheckoutDeliveryMethod: FC = () => {
   const shippingOptionsByProfile = useMemo(() => getShippingOptionsByProfile(shippingOptions), [shippingOptions]);
   const isComplete = useMemo(() => checkDeliveryMethodComplete(cart, shippingOptions), [cart, shippingOptions]);
   const fetchers = useFetchers() as (Fetcher & { formAction: string })[];
-  const lineItemFetchers = fetchers.filter((f) => f.formAction && f.formAction === '/api/cart/line-items');
+  const lineItemFetchers = fetchers.filter((f) => f.formAction && f.formAction.startsWith('/api/cart/line-items'));
   const lineItemFetchersLoading = lineItemFetchers.some((fetcher) => ['loading'].includes(fetcher.state));
 
   const validator = getCheckoutAddShippingMethodValidator(shippingOptions);

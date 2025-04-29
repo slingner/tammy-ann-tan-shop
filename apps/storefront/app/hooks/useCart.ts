@@ -27,7 +27,7 @@ export const useCart = () => {
     removing: fetchers.find(
       (f) =>
         (f.state === 'submitting' || f.state === 'loading') &&
-        f.formData?.get('subaction') === 'deleteItem' &&
+        f.formMethod?.endsWith('delete') &&
         f.formData?.get('lineItemId'),
     ),
 
@@ -37,7 +37,7 @@ export const useCart = () => {
         (f.state === 'submitting' || f.state === 'loading') &&
         (f.formData?.get('action') === 'add-to-cart' ||
           f.formData?.has('variantId') ||
-          (f.formAction?.includes('/api/cart/line-items') && f.formData?.get('subaction') === 'create')),
+          f.formAction?.includes('/api/cart/line-items/create')),
     ),
   };
 

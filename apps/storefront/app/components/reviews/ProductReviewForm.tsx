@@ -1,6 +1,6 @@
 import { ImageUploadWithPreview, ProductReviewImage } from '@app/components/common/ImageUpload/ImageUploadWithPreview';
 import { Actions } from '@app/components/common/actions';
-import { Button, SubmitButton } from '@app/components/common/buttons';
+import { Button, OldSubmitButton } from '@app/components/common/buttons';
 import { Form } from '@app/components/common/forms/Form';
 import { FormError } from '@app/components/common/forms/FormError';
 import { FieldLabel } from '@app/components/common/forms/fields/FieldLabel';
@@ -91,7 +91,7 @@ export const ProductReviewForm: FC<ProductReviewFormProps> = ({
       <FieldTextarea name="content" placeholder="Add your review" className="sm:col-span-12" />
       <Actions>
         {isComplete && <Button onClick={() => setEditing(false)}>Cancel</Button>}
-        <SubmitButton>{isComplete ? 'Save' : 'Submit Review'}</SubmitButton>
+        <OldSubmitButton>{isComplete ? 'Save' : 'Submit Review'}</OldSubmitButton>
       </Actions>
     </Form>
   );

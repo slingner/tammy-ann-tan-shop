@@ -3,14 +3,14 @@ import { FC } from 'react';
 import { FieldSelect, FieldSelectProps } from '../forms/fields/FieldSelect';
 import { StoreProductVariant } from '@medusajs/types';
 
-interface QuantitySelectorProps extends Omit<FieldSelectProps, 'name' | 'options'> {
+interface OldQuantitySelectorProps extends Omit<FieldSelectProps, 'name' | 'options'> {
   variant: StoreProductVariant | undefined;
   maxInventory?: number;
   className?: string;
   formId?: string;
 }
 
-export const QuantitySelector: FC<QuantitySelectorProps> = ({
+export const OldQuantitySelector: FC<OldQuantitySelectorProps> = ({
   formId,
   className,
   variant,

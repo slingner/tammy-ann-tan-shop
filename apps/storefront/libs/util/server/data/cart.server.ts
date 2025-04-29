@@ -1,6 +1,6 @@
 import { medusaError } from '@libs/util/medusaError';
 import { sdk } from '@libs/util/server/client.server';
-import { HttpTypes } from '@medusajs/types';
+import { HttpTypes, StoreCart } from '@medusajs/types';
 import omit from 'lodash.omit';
 import { withAuthHeaders } from '../auth.server';
 import { getCartId } from '../cookies.server';
@@ -92,6 +92,22 @@ export const addToCart = withAuthHeaders(
     return cart;
   },
 );
+
+export const ensureStripePaymentSession = async (request: Request, cart: StoreCart): Promise<StoreCart> => {
+  if (!cart) throw new Error('Cart was not provided.');
+
+  let activeSession = cart.payment_collection?.payment_sessions?.find((session) => session.status === 'pending');
+
+  if (!activeSession) {
+    await initiatePaymentSession(request, cart, {
+      provider_id: 'pp_stripe_stripe',
+    });
+
+    return (await retrieveCart(request))!;
+  }
+
+  return cart;
+};
 
 export const updateLineItem = withAuthHeaders(
   async (
