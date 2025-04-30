@@ -1,28 +1,24 @@
-import { handleAction, ActionHandler } from '@libs/util/handleAction.server';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { getCartId, setSelectedRegionId } from '@libs/util/server/cookies.server';
 import { updateCart } from '@libs/util/server/data/cart.server';
 import { retrieveRegion } from '@libs/util/server/data/regions.server';
-import { ActionFunctionArgs, data as remixData } from '@remix-run/node';
-import { withYup } from '@remix-validated-form/with-yup';
-import { validationError } from 'remix-validated-form';
-import * as Yup from 'yup';
+import { ActionFunctionArgs, data } from 'react-router';
+import { getValidatedFormData } from 'remix-hook-form';
+import { z } from 'zod';
 
-export enum RegionActions {
-  CHANGE_REGION = 'changeRegion',
-}
+export const changeRegionSchema = z.object({
+  regionId: z.string().min(1, 'Region ID is required'),
+});
 
-export const changeRegionValidator = withYup(
-  Yup.object().shape({
-    regionId: Yup.string().required(),
-  }),
-);
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const { errors, data: formData } = await getValidatedFormData(request, zodResolver(changeRegionSchema));
 
-const changeRegion: ActionHandler = async (data: { regionId: string }, { request }) => {
-  const result = await changeRegionValidator.validate(data);
-  if (result.error) return validationError(result.error);
+  if (errors) {
+    return data({ errors }, { status: 400 });
+  }
 
   try {
-    const { regionId } = result.data;
+    const { regionId } = formData;
 
     await retrieveRegion(regionId);
 
@@ -34,21 +30,10 @@ const changeRegion: ActionHandler = async (data: { regionId: string }, { request
 
     if (cartId) await updateCart(request, { region_id: regionId });
 
-    return remixData({ success: true }, { headers });
+    return data({ success: true }, { headers });
   } catch (error: any) {
-    return remixData(error.response.data, {
+    return data(error.response.data, {
       status: error.response.status,
     });
   }
-};
-
-const actions = {
-  changeRegion,
-};
-
-export const action = async (actionArgs: ActionFunctionArgs) => {
-  return await handleAction({
-    actionArgs,
-    actions,
-  });
 };

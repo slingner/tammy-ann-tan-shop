@@ -1,6 +1,6 @@
-import type { MetaDescriptor, MetaFunction } from '@remix-run/node';
-import { UIMatch } from '@remix-run/react';
-import { MetaMatch } from '@remix-run/react/dist/routeModules';
+import type { MetaDescriptor, MetaFunction } from 'react-router';
+import { UIMatch } from 'react-router';
+import { MetaMatch } from '@react-router/react/dist/routeModules';
 import type { RootLoaderResponse } from './server/root.server';
 
 const filterEmptyMeta = (meta: MetaDescriptor[]) =>

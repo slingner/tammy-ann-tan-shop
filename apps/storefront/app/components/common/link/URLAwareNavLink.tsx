@@ -1,5 +1,5 @@
-import { NavLink } from '@remix-run/react';
-import { RemixNavLinkProps } from '@remix-run/react/dist/components';
+import { NavLink } from 'react-router';
+import { RemixNavLinkProps } from '@react-router/react/dist/components';
 import { FC, HTMLAttributes, PropsWithChildren } from 'react';
 
 export interface AwareNavLinkProps {

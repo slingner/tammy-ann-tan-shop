@@ -1,3 +1,4 @@
+import { TextField } from '@lambdacurry/forms/remix-hook-form';
 import { Address } from '@libs/types';
 
 interface HiddenAddressGroupProps {
@@ -13,7 +14,7 @@ const HiddenAddressGroup: React.FC<HiddenAddressGroupProps> = ({ address, prefix
         if (address[castedKey] == null) return;
 
         return (
-          <input
+          <TextField
             type="hidden"
             key={castedKey as string}
             name={`${prefix}.${key}`}

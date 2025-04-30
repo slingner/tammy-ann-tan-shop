@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { StarRating } from './StarRating';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { StoreProductReviewStats } from '@lambdacurry/medusa-plugins-sdk';
 
 interface ProductReviewStarsProps {

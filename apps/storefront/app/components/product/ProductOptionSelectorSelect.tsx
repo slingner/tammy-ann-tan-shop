@@ -1,6 +1,6 @@
-import { FieldSelect } from '@app/components/common/forms/fields/FieldSelect';
 import { formatPrice } from '@libs/util/prices';
 import type { ChangeEvent, FC } from 'react';
+import { useRemixFormContext } from 'remix-hook-form';
 
 export interface ProductOptionSelectorProps {
   option: {
@@ -26,6 +26,7 @@ export const ProductOptionSelectorSelect: FC<ProductOptionSelectorProps> = ({
   value,
   currencyCode,
 }) => {
+  const { register } = useRemixFormContext();
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (onChange) onChange(event);
   };
@@ -71,12 +72,35 @@ export const ProductOptionSelectorSelect: FC<ProductOptionSelectorProps> = ({
   });
 
   return (
-    <FieldSelect
-      name={`options.${option.id}`}
-      label={option.title}
-      options={[{ label: 'Select one', value: '' }, ...formattedOptions]}
-      onChange={handleChange}
-      inputProps={{ value }}
-    />
+    <div className="flex flex-col gap-2">
+      <label htmlFor={option.id} className="text-sm font-medium text-gray-700">
+        {option.title}
+      </label>
+      <select
+        {...register(`options.${option.id}`)}
+        id={option.id}
+        className="form-select"
+        defaultValue={value}
+        onChange={handleChange}
+      >
+        {formattedOptions.map((optValue, valueIndex) => (
+          <option key={valueIndex} value={optValue.value} disabled={optValue.disabled}>
+            {optValue.disabled
+              ? `${optValue.label || optValue.value} (not available)`
+              : optValue.label || optValue.value}
+          </option>
+        ))}
+      </select>
+    </div>
   );
+
+  // return (
+  //   <FieldSelect
+  //     name={`options.${option.id}`}
+  //     label={option.title}
+  //     options={[{ label: 'Select one', value: '' }, ...formattedOptions]}
+  //     onChange={handleChange}
+  //     inputProps={{ value }}
+  //   />
+  // );
 };

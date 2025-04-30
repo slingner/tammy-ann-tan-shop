@@ -3,7 +3,7 @@ import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import { Image } from '../images/Image';
 import { ImageUploader } from './ImageUploader';
 import clsx from 'clsx';
-import { FieldError } from '../forms/fields/FieldError';
+import { FormError } from '../remix-hook-form/forms/FormError';
 
 export interface ProductReviewImage {
   id?: string;
@@ -86,7 +86,7 @@ export const ImageUploadWithPreview: React.FC<ImageUploadWithPreviewProps> = ({
         />
       )}
 
-      <FieldError className="my-2" error={error} />
+      <FormError className="my-2" error={error} />
 
       <ImageUploader
         handleChange={handleFileInputChange}

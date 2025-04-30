@@ -1,45 +1,27 @@
-import { CreateNewsletterSubscriberReq } from '@libs/types';
-import { ActionFunctionArgs, json } from '@remix-run/node';
-import { withYup } from '@remix-validated-form/with-yup';
-import * as Yup from 'yup';
-import { validationError } from 'remix-validated-form';
-import { emailAddressValidation } from '@libs/util/validation';
-import { handleAction, ActionHandler } from '@libs/util/handleAction.server';
+import { ActionFunctionArgs, data } from 'react-router';
+import { z } from 'zod';
+import { getValidatedFormData } from 'remix-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-export enum NewsletterSubscriptionAction {
-  SUBSCRIBE_EMAIL = 'subscribeEmail',
-}
+export const newsletterSubscriberSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+});
 
-export const newsletterSubscriberFormValidator = withYup(
-  Yup.object().shape({
-    ...emailAddressValidation,
-  }),
-);
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const { data: validatedData, errors } = await getValidatedFormData(
+    await request.formData(),
+    zodResolver(newsletterSubscriberSchema),
+  );
 
-const subscribeEmail: ActionHandler = async (data: CreateNewsletterSubscriberReq, { request }) => {
-  const result = await newsletterSubscriberFormValidator.validate(data);
-  if (result.error) return validationError(result.error);
-
-  try {
-    const { email } = result.data;
-
-    // Implement newsletter subscription here!
-
-    console.log('Subscribed to newsletter', email);
-
-    return json({ success: true }, { status: 200 });
-  } catch (error: any) {
-    return json(error.response.data, { status: error.response.status });
+  if (errors) {
+    return data({ errors }, { status: 400 });
   }
-};
 
-const actions = {
-  subscribeEmail,
-};
+  const { email } = validatedData;
 
-export const action = async (actionArgs: ActionFunctionArgs) => {
-  return await handleAction({
-    actionArgs,
-    actions,
-  });
+  // Implement newsletter subscription here!
+
+  console.log('Subscribed to newsletter', email);
+
+  return data({ success: true }, { status: 200 });
 };

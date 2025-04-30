@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 
 import { GalleryImage, ReviewImageThumbnailRow } from './ReviewImageThumbnailRow';

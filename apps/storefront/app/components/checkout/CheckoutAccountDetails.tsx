@@ -1,62 +1,54 @@
 import { Actions } from '@app/components/common/actions/Actions';
 import { Button } from '@app/components/common/buttons/Button';
-import { SubmitButton } from '@app/components/common/buttons/SubmitButton';
-import { Form } from '@app/components/common/forms/Form';
-import { FormError } from '@app/components/common/forms/FormError';
-import { FieldGroup } from '@app/components/common/forms/fields/FieldGroup';
-import { FieldText } from '@app/components/common/forms/fields/FieldText';
+import { StyledTextField } from '@app/components/common/remix-hook-form/forms/fields/StyledTextField';
 import { useCheckout } from '@app/hooks/useCheckout';
 import { useCustomer } from '@app/hooks/useCustomer';
 import { useRegions } from '@app/hooks/useRegions';
-import { checkAccountDetailsComplete } from '@libs/util/checkout';
-import { useFetcher } from '@remix-run/react';
-import debounce from 'lodash/debounce';
-import { useEffect, useRef, useState } from 'react';
-import { useFormContext } from 'remix-validated-form';
-import { CheckoutAction, type UpdateAccountDetailsInput } from '@app/routes/api.checkout';
 import { CheckoutStep } from '@app/providers/checkout-provider';
-import { emailAddressValidation } from '@libs/util/validation';
-import { CheckoutSectionHeader } from './CheckoutSectionHeader';
-import HiddenAddressGroup from './HiddenAddressGroup';
-import {
-  MedusaStripeAddress,
-  defaultStripeAddress,
-  type StripeAddress,
-} from './MedusaStripeAddress/MedusaStripeAddress';
-import { AddressDisplay } from './address/AddressDisplay';
-import { checkoutAccountDetailsValidator, selectInitialShippingAddress } from './checkout-form-helpers';
-import type { StoreRegion, StoreRegionCountry } from '@medusajs/types';
-
+import { accountDetailsSchema } from '@app/routes/api.checkout.account-details';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { TextField } from '@lambdacurry/forms/remix-hook-form';
 import type { MedusaAddress } from '@libs/types';
 import { medusaAddressToAddress } from '@libs/util';
+import { checkAccountDetailsComplete } from '@libs/util/checkout';
+import type { StoreRegion, StoreRegionCountry } from '@medusajs/types';
+import { useFetcher } from 'react-router';
+import { useEffect } from 'react';
+import { FieldErrors } from 'react-hook-form';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { SubmitButton } from '../common/remix-hook-form/buttons/SubmitButton';
+import { FormError } from '../common/remix-hook-form/forms/FormError';
+import { CheckoutSectionHeader } from './CheckoutSectionHeader';
+import HiddenAddressGroup from './HiddenAddressGroup';
+import { MedusaStripeAddress, type StripeAddress } from './MedusaStripeAddress/MedusaStripeAddress';
+import { AddressDisplay } from './address/AddressDisplay';
+import { selectInitialShippingAddress } from './checkout-form-helpers';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 const NEW_SHIPPING_ADDRESS_ID = 'new';
+
 export const CheckoutAccountDetails = () => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const checkoutContactInfoFormFetcher = useFetcher<{}>();
   const checkoutAccountDetailsFormFetcher = useFetcher<{
-    fieldErrors: Record<string, string>;
-  }>();
-  const form = useFormContext('checkoutAccountDetailsForm');
+    errors: FieldErrors;
+  }>({ key: FetcherKeys.cart.accountDetails });
   const { customer } = useCustomer();
-  const { step, setStep, goToNextStep, cart } = useCheckout();
+  const { regions } = useRegions();
+  const { step, setStep, goToNextStep, cart, isCartMutating } = useCheckout();
   const isActiveStep = step === CheckoutStep.ACCOUNT_DETAILS;
 
   if (!cart) return null;
 
-  const { regions } = useRegions();
   const allowedCountries = (regions ?? []).flatMap(
     (region: StoreRegion) => region.countries!.map((country: StoreRegionCountry) => country.iso_2) as string[],
   );
+
   const initialShippingAddress = selectInitialShippingAddress(cart, customer!);
-  const [stripeShippingAddress, setStripeShippingAddress] = useState<StripeAddress>(() =>
-    defaultStripeAddress(initialShippingAddress),
-  );
 
   const isComplete = checkAccountDetailsComplete(cart);
+
   const isSubmitting = ['submitting', 'loading'].includes(checkoutAccountDetailsFormFetcher.state);
 
-  const hasErrors = !!checkoutAccountDetailsFormFetcher.data?.fieldErrors;
+  const hasErrors = !!checkoutAccountDetailsFormFetcher.data?.errors;
 
   const initialShippingAddressId = initialShippingAddress?.id ?? NEW_SHIPPING_ADDRESS_ID;
 
@@ -77,16 +69,31 @@ export const CheckoutAccountDetails = () => {
     shippingAddressId: initialShippingAddressId,
   };
 
-  // on load, submit form with default values if there is only one shipping address
-  useEffect(() => {
-    if (!formRef.current || !customer?.addresses || customer.addresses.length > 1 || initialShippingAddressId) return;
-    const formData = new FormData(formRef.current);
-    form.reset();
-    checkoutAccountDetailsFormFetcher.submit(formData, {
+  const form = useRemixForm({
+    resolver: zodResolver(accountDetailsSchema),
+    defaultValues,
+    fetcher: checkoutAccountDetailsFormFetcher,
+    submitConfig: {
       method: 'post',
-      action: '/api/checkout',
-    });
-  }, [formRef.current]);
+      action: '/api/checkout/account-details',
+    },
+  });
+
+  const setShippingAddress = (address: StripeAddress) => {
+    form.setValue('shippingAddress.address1', address.address.address1 ?? '');
+    form.setValue('shippingAddress.address2', address.address.address2 ?? '');
+    form.setValue('shippingAddress.city', address.address.city ?? '');
+    form.setValue('shippingAddress.province', address.address.province ?? '');
+    form.setValue('shippingAddress.countryCode', address.address.countryCode ?? '');
+    form.setValue('shippingAddress.postalCode', address.address.postalCode ?? '');
+    form.setValue('shippingAddress.phone', address.address.phone ?? '');
+    form.setValue('shippingAddress.firstName', address.address.firstName ?? '');
+    form.setValue('shippingAddress.lastName', address.address.lastName ?? '');
+    form.setValue('shippingAddress.company', address.address.company ?? '');
+    form.setValue('shippingAddress.phone', address.address.phone ?? '');
+  };
+
+  const shippingAddress = form.watch('shippingAddress');
 
   useEffect(() => {
     if (isActiveStep && !isSubmitting && !hasErrors && isComplete) {
@@ -99,20 +106,6 @@ export const CheckoutAccountDetails = () => {
     goToNextStep();
   };
 
-  const handleEmailChange = debounce(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const isEmailValid = await emailAddressValidation.email.isValid(e.target.value);
-      if (!isEmailValid) return;
-
-      checkoutContactInfoFormFetcher.submit(new FormData(e.target.form as HTMLFormElement), {
-        method: 'post',
-        action: '/api/checkout',
-      });
-    },
-    500,
-    { leading: true },
-  );
-
   const showCompleted = isComplete && !isActiveStep;
 
   return (
@@ -122,76 +115,57 @@ export const CheckoutAccountDetails = () => {
       </CheckoutSectionHeader>
 
       {!isActiveStep && isComplete && (
-        <AddressDisplay
-          title="Shipping Address"
-          address={stripeShippingAddress.address}
-          countryOptions={countryOptions}
-        />
+        <AddressDisplay title="Shipping Address" address={shippingAddress} countryOptions={countryOptions} />
       )}
 
       {isActiveStep && (
         <>
           {customer?.email ? (
-            <p className="mt-2 text-sm">To get started, please select your shipping address.</p>
+            <p className="mt-2 text-sm mb-2">To get started, please select your shipping address.</p>
           ) : (
-            <p className="mt-2 text-sm">To get started, enter your email address.</p>
+            <p className="mt-2 text-sm mb-4">To get started, enter your email address.</p>
           )}
 
-          <Form<UpdateAccountDetailsInput, CheckoutAction.UPDATE_ACCOUNT_DETAILS>
-            formRef={formRef}
-            id="checkoutAccountDetailsForm"
-            method="post"
-            action="/api/checkout"
-            fetcher={checkoutAccountDetailsFormFetcher}
-            defaultValues={defaultValues}
-            subaction={CheckoutAction.UPDATE_ACCOUNT_DETAILS}
-            // @ts-ignore
-            validator={checkoutAccountDetailsValidator}
-          >
-            <FieldText type="hidden" name="cartId" />
-            <FieldText type="hidden" name="customerId" />
+          <RemixFormProvider {...form}>
+            <checkoutAccountDetailsFormFetcher.Form id="checkout-account-details-form" onSubmit={form.handleSubmit}>
+              <TextField type="hidden" name="cartId" />
+              <TextField type="hidden" name="customerId" />
 
-            <FieldGroup>
-              <FieldText
-                inputProps={{
-                  autoFocus: true,
-                }}
+              <StyledTextField
                 name="email"
                 type="email"
                 autoComplete="email"
                 placeholder="Email address"
                 label="Email Address"
-                onChange={handleEmailChange}
+                className="[&_input]:!ring-0 mb-2"
               />
-            </FieldGroup>
 
-            <HiddenAddressGroup address={stripeShippingAddress.address} prefix="shippingAddress" />
+              <HiddenAddressGroup address={shippingAddress} prefix="shippingAddress" />
 
-            <FieldText type="hidden" name="shippingAddressId" value={initialShippingAddressId} />
+              <StyledTextField type="hidden" name="shippingAddressId" value={initialShippingAddressId} />
 
-            <MedusaStripeAddress
-              mode="shipping"
-              address={stripeShippingAddress.address}
-              allowedCountries={allowedCountries}
-              setAddress={setStripeShippingAddress}
-            />
+              <MedusaStripeAddress
+                mode="shipping"
+                address={shippingAddress}
+                allowedCountries={allowedCountries}
+                setAddress={setShippingAddress}
+              />
 
-            <FormError />
+              <FormError />
 
-            <Actions>
-              <SubmitButton
-                disabled={isSubmitting || (!stripeShippingAddress.completed && initialShippingAddressId === 'new')}
-              >
-                {isSubmitting ? 'Saving...' : 'Save and continue'}
-              </SubmitButton>
+              <Actions>
+                <SubmitButton disabled={isSubmitting || isCartMutating}>
+                  {isSubmitting ? 'Saving...' : 'Save and continue'}
+                </SubmitButton>
 
-              {isComplete && (
-                <Button disabled={isSubmitting} onClick={handleCancel}>
-                  Cancel edit
-                </Button>
-              )}
-            </Actions>
-          </Form>
+                {isComplete && (
+                  <Button disabled={isSubmitting} onClick={handleCancel}>
+                    Cancel edit
+                  </Button>
+                )}
+              </Actions>
+            </checkoutAccountDetailsFormFetcher.Form>
+          </RemixFormProvider>
         </>
       )}
     </div>

@@ -1,6 +1,6 @@
 // https://github.com/remix-run/remix/issues/2947
 
-import { RemixBrowser } from '@remix-run/react';
+import { HydratedRouter } from 'react-router/dom';
 import * as Sentry from '@sentry/remix';
 import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -23,7 +23,7 @@ const hydrate = () =>
     hydrateRoot(
       document,
       <StrictMode>
-        <RemixBrowser />
+        <HydratedRouter />
       </StrictMode>,
     );
   });

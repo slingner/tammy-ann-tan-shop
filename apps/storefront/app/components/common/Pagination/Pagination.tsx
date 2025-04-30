@@ -3,7 +3,7 @@ import ChevronRightIcon from '@heroicons/react/24/solid/ChevronRightIcon';
 import { FC, ReactNode, useEffect } from 'react';
 import { usePagination } from './react-use-pagination';
 import clsx from 'clsx';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 
 export interface PaginationConfig {
   prefix?: string;

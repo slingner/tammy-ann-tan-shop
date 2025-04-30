@@ -1,5 +1,5 @@
-import { json, LoaderFunctionArgs } from '@remix-run/node';
+import { LoaderFunctionArgs } from 'react-router';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ status: "It's alive!!!" });
+  return Response.json({ status: "It's alive!!!" });
 };

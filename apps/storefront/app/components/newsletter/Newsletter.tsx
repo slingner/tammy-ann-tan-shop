@@ -1,32 +1,32 @@
-import { type FC, useEffect, useRef } from 'react';
-import { Form } from '@app/components/common/forms/Form';
 import { Alert } from '@app/components/common/alert';
-import { type FetcherWithComponents, useFetcher } from '@remix-run/react';
-import { SubmitButton } from '@app/components/common/buttons';
-import {
-  NewsletterSubscriptionAction,
-  newsletterSubscriberFormValidator,
-} from '@app/routes/api.newsletter-subscriptions';
-import { FieldText } from '@app/components/common/forms/fields/FieldText';
+import { newsletterSubscriberSchema } from '@app/routes/api.newsletter-subscriptions';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { TextField } from '@lambdacurry/forms/remix-hook-form';
+import { useFetcher } from 'react-router';
 import clsx from 'clsx';
+import { type FC, useEffect } from 'react';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { SubmitButton } from '../common/remix-hook-form/buttons/SubmitButton';
 
-export interface NewsletterSubscriptionFromValues {
-  email: string;
-}
 export const NewsletterSubscription: FC<{ className?: string }> = ({ className }) => {
-  const formRef = useRef<HTMLFormElement>(null);
   const fetcher = useFetcher<{
     success: boolean;
-    fieldErrors?: Record<string, string>;
-  }>() as FetcherWithComponents<{
-    success: boolean;
-    fieldErrors?: Record<string, string>;
-  }>;
+    errors?: Record<string, { message: string }>;
+  }>();
+
+  const form = useRemixForm({
+    resolver: zodResolver(newsletterSubscriberSchema),
+    fetcher,
+    submitConfig: {
+      method: 'post',
+      action: '/api/newsletter-subscriptions',
+    },
+  });
 
   useEffect(() => {
     if (fetcher.data?.success) {
-      formRef.current?.reset();
+      form.reset();
     }
   }, [fetcher.data]);
 
@@ -35,38 +35,28 @@ export const NewsletterSubscription: FC<{ className?: string }> = ({ className }
       {fetcher.data?.success ? (
         <Alert type="success" className="mb-2 mt-4 min-w-[280px]" title={`Thank you for subscribing!`} />
       ) : (
-        <Form<NewsletterSubscriptionFromValues, NewsletterSubscriptionAction.SUBSCRIBE_EMAIL>
-          id="newsletterSubscriptionForm"
-          method="post"
-          action="/api/newsletter-subscriptions"
-          subaction={NewsletterSubscriptionAction.SUBSCRIBE_EMAIL}
-          validator={newsletterSubscriberFormValidator}
-          fetcher={fetcher}
-          formRef={formRef}
-        >
-          <div className="flex items-end gap-2 border-b border-white">
-            <FieldText
-              className="min-w-[220px]"
-              label={
-                <div className="flex flex-col text-white gap-5">
-                  <span className="text-lg font-bold">Newsletter</span>
-                  <p className="font-light">Sign up for our newsletter to only receive good things.</p>
-                </div>
-              }
-              name="email"
-              placeholder="Enter your email"
-              fieldTextProps={{
-                className: 'border-none rounded-none',
-              }}
-              inputProps={{
-                className: 'mt-7 pl-0 bg-transparent placeholder:text-white',
-              }}
-            />
-            <SubmitButton variant="ghost" className="pr-0 pl-0">
-              <ArrowRightIcon className="w-5 h-5" />
-            </SubmitButton>
-          </div>
-        </Form>
+        <RemixFormProvider {...form}>
+          <fetcher.Form onSubmit={form.handleSubmit}>
+            <div className="items-end gap-2 border-b border-white">
+              <div className="flex flex-col text-white gap-5">
+                <span className="text-lg font-bold">Newsletter</span>
+                <p className="font-light">Sign up for our newsletter to only receive good things.</p>
+              </div>
+
+              <div className="flex items-end gap-2">
+                <input
+                  {...form.register('email')}
+                  name="email"
+                  placeholder="Enter your email"
+                  className="min-w-[220px] w-full text-white border-none rounded-none mt-2 pl-0 bg-transparent placeholder:text-white"
+                />
+                <SubmitButton variant="ghost" className="pr-0 pl-0">
+                  <ArrowRightIcon className="w-5 h-5" />
+                </SubmitButton>
+              </div>
+            </div>
+          </fetcher.Form>
+        </RemixFormProvider>
       )}
     </div>
   );

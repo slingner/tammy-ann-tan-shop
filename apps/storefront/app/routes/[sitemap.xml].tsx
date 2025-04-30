@@ -1,5 +1,5 @@
 import { SitemapUrl } from '@libs/util/xml/sitemap-builder';
-import { LoaderFunctionArgs } from '@remix-run/node';
+import { LoaderFunctionArgs } from 'react-router';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const host = request.headers.get('host');

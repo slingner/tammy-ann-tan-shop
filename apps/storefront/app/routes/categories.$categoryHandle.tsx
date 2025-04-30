@@ -1,5 +1,5 @@
-import { LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { NavLink, useLoaderData } from '@remix-run/react';
+import { LoaderFunctionArgs, redirect } from 'react-router';
+import { NavLink, useLoaderData } from 'react-router';
 import { ProductListWithPagination } from '@app/components/product/ProductListWithPagination';
 import { Container } from '@app/components/common/container';
 import { listCategories } from '@libs/util/server/data/categories.server';

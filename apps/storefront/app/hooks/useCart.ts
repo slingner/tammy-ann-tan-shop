@@ -1,8 +1,9 @@
-import { useFetchers } from '@remix-run/react';
+import { useFetchers } from 'react-router';
 import { useRootLoaderData } from './useRootLoaderData';
 import { useStorefront } from './useStorefront';
 import { StoreCart } from '@medusajs/types';
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 /**
  * Enhanced useCart hook that combines cart data management and drawer state logic
@@ -27,17 +28,16 @@ export const useCart = () => {
     removing: fetchers.find(
       (f) =>
         (f.state === 'submitting' || f.state === 'loading') &&
-        f.formData?.get('subaction') === 'deleteItem' &&
+        f.key === FetcherKeys.cart.removeLineItem &&
         f.formData?.get('lineItemId'),
     ),
 
     // Find any fetcher that's adding items to cart
     adding: fetchers.filter(
       (f) =>
+        f.key === FetcherKeys.cart.createLineItem &&
         (f.state === 'submitting' || f.state === 'loading') &&
-        (f.formData?.get('action') === 'add-to-cart' ||
-          f.formData?.has('variantId') ||
-          (f.formAction?.includes('/api/cart/line-items') && f.formData?.get('subaction') === 'create')),
+        f.formData?.has('variantId'),
     ),
   };
 
@@ -45,6 +45,10 @@ export const useCart = () => {
   const cart = data?.cart as StoreCart | undefined;
   const lineItems = cart?.items || [];
   const itemCount = lineItems.length;
+
+  if (cartFetchers.removing) {
+    console.log('removing', cartFetchers.removing?.formData?.get('lineItemId'));
+  }
 
   // Derived states from Remix fetchers
   const isAddingItem = cartFetchers.adding.length > 0;

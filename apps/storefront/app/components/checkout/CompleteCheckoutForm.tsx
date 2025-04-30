@@ -1,25 +1,23 @@
-import { FC, FormEvent, PropsWithChildren, useEffect, useState } from 'react';
-import { type Fetcher, SubmitFunction, useFetcher, useFetchers } from '@remix-run/react';
+import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
+import { useCheckout } from '@app/hooks/useCheckout';
+import { CompleteCheckoutFormData, completeCheckoutSchema } from '@app/routes/api.checkout.complete';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Checkbox, TextField } from '@lambdacurry/forms/remix-hook-form';
 import { type CustomPaymentSession, type MedusaAddress } from '@libs/types';
-import { convertToFormData } from '@libs/util/forms/objectToFormData';
-import { CheckoutAction, UpdatePaymentInput, UpdateBillingAddressInput } from '@app/routes/api.checkout';
-import { useFormContext } from 'remix-validated-form';
-import { CheckoutOrderSummary, checkoutPaymentValidator } from '.';
-import isEqual from 'lodash/isEqual';
-import { SubmitButton } from '@app/components/common/buttons/SubmitButton';
-import { Form } from '@app/components/common/forms/Form';
-import { FieldGroup } from '@app/components/common/forms/fields/FieldGroup';
-import { FieldCheckbox } from '@app/components/common/forms/fields/FieldCheckbox';
-import { FormError } from '@app/components/common/forms/FormError';
-import { AddressDisplay } from './address/AddressDisplay';
+import { emptyAddress, medusaAddressToAddress } from '@libs/util';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
+import { FC, FormEvent, PropsWithChildren, useState } from 'react';
+import { SubmitFunction, useFetcher } from 'react-router';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { CheckoutOrderSummary } from '.';
+import { FormError } from '../common/remix-hook-form/forms/FormError';
+import HiddenAddressGroup from './HiddenAddressGroup';
 import {
   MedusaStripeAddress,
-  defaultStripeAddress,
   type StripeAddress,
+  defaultStripeAddress,
 } from './MedusaStripeAddress/MedusaStripeAddress';
-import HiddenAddressGroup from './HiddenAddressGroup';
-import { emptyAddress, medusaAddressToAddress } from '@libs/util';
-import { useCheckout } from '@app/hooks/useCheckout';
+import { AddressDisplay } from './address/AddressDisplay';
 
 export interface CompleteCheckoutFormProps extends PropsWithChildren {
   id: string;
@@ -28,7 +26,7 @@ export interface CompleteCheckoutFormProps extends PropsWithChildren {
   submitMessage?: string;
   className?: string;
   onSubmit?: (
-    data: UpdatePaymentInput,
+    data: CompleteCheckoutFormData,
     event: FormEvent<HTMLFormElement>,
     methods: {
       setSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,37 +44,24 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
   providerId,
   className,
 }) => {
-  const { activePaymentSession, cart } = useCheckout();
-  const fetchers = useFetchers() as (Fetcher & { formAction: string })[];
-  const checkoutFetchers = fetchers.filter(
-    (f) => f.formAction && (f.formAction === '/api/checkout' || f.formAction === '/api/cart/line-items'),
-  );
-  const isCheckoutLoading = checkoutFetchers.some((fetcher) => ['submitting', 'loading'].includes(fetcher.state));
+  const { activePaymentSession, cart, isCartMutating } = useCheckout();
 
-  const submitPaymentFetcher = useFetcher<never>();
+  const completeCartFetcher = useFetcher<never>({ key: FetcherKeys.cart.completeCheckout });
+
   const [submitting, setSubmitting] = useState(false);
-  const isSubmitting = ['submitting', 'loading'].includes(submitPaymentFetcher.state) || submitting;
 
-  const [newBillingAddress, setNewBillingAddress] = useState<StripeAddress>(
-    defaultStripeAddress(cart?.shipping_address),
-  );
-
-  // Note: this helps prevent people from getting stuck if they try to submit with Cash App or Google Pay and then close out of that UI
-  const { fieldErrors: stripeFieldError } = useFormContext('stripePaymentForm');
-  useEffect(() => {
-    if (stripeFieldError.formError) {
-      setSubmitting(false);
-    }
-  }, [stripeFieldError]);
+  const isSubmitting = ['submitting', 'loading'].includes(completeCartFetcher.state) || submitting;
 
   const paymentMethodsForProvider = paymentMethods.filter((paymentMethod) => paymentMethod.provider_id === providerId);
+
   const hasPaymentMethods = paymentMethodsForProvider.length > 0;
+
   const initialPaymentMethodId = hasPaymentMethods ? paymentMethodsForProvider[0].data.id : 'new';
-  const [sameAsShipping, setSameAsShipping] = useState<boolean | undefined>(true);
 
   if (!cart) return null;
 
-  const billingAddress = medusaAddressToAddress(cart.billing_address as MedusaAddress);
+  const defaultBillingAddress = medusaAddressToAddress(cart.billing_address as MedusaAddress);
+  const shippingAddress = defaultStripeAddress(cart?.shipping_address) ?? emptyAddress;
 
   const countryOptions =
     (cart.region?.countries?.map((country) => ({
@@ -84,45 +69,63 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
       label: country.display_name,
     })) as { value: string; label: string }[]) ?? [];
 
-  const defaultValues: UpdatePaymentInput = {
+  const defaultValues: CompleteCheckoutFormData = {
     cartId: cart.id,
     paymentMethodId: initialPaymentMethodId,
     sameAsShipping: true,
-    billingAddress: emptyAddress,
+    billingAddress: defaultBillingAddress,
     providerId,
   };
 
-  const handleSubmit = async (data: UpdatePaymentInput, event: FormEvent<HTMLFormElement>) => {
+  const form = useRemixForm({
+    resolver: zodResolver(completeCheckoutSchema),
+    defaultValues,
+    fetcher: completeCartFetcher,
+    submitConfig: {
+      method: 'post',
+      action: '/api/checkout/complete',
+    },
+  });
+
+  const sameAsShipping = form.watch('sameAsShipping');
+  const billingAddress = form.watch('billingAddress');
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formElement = event.target as HTMLFormElement;
 
     setSubmitting(true);
 
-    if (data.billingAddress && !data.sameAsShipping && !isEqual(billingAddress, data.billingAddress)) {
-      const formData = convertToFormData({
-        cartId: data.cartId,
-        subaction: CheckoutAction.UPDATE_BILLING_ADDRESS,
-        billingAddress: data.billingAddress,
-      } as UpdateBillingAddressInput);
-
-      await fetch('/api/checkout', { method: 'post', body: formData });
-    }
+    const data = form.getValues();
 
     if (typeof onSubmit === 'function') {
       return await onSubmit(data, event, {
         setSubmitting,
-        submit: submitPaymentFetcher.submit,
+        submit: () => form.handleSubmit(),
       });
     }
 
-    return submitPaymentFetcher.submit(formElement);
+    return form.handleSubmit();
+  };
+
+  const setBillingAddress = (address: StripeAddress) => {
+    form.setValue('billingAddress.address1', address.address.address1 ?? '');
+    form.setValue('billingAddress.address2', address.address.address2 ?? '');
+    form.setValue('billingAddress.city', address.address.city ?? '');
+    form.setValue('billingAddress.province', address.address.province ?? '');
+    form.setValue('billingAddress.countryCode', address.address.countryCode ?? '');
+    form.setValue('billingAddress.postalCode', address.address.postalCode ?? '');
+    form.setValue('billingAddress.phone', address.address.phone ?? '');
+    form.setValue('billingAddress.firstName', address.address.firstName ?? '');
+    form.setValue('billingAddress.lastName', address.address.lastName ?? '');
+    form.setValue('billingAddress.company', address.address.company ?? '');
+    form.setValue('billingAddress.phone', address.address.phone ?? '');
   };
 
   const PaymentSubmitButton = () => (
     <SubmitButton
       form={id}
       className="w-full lg:w-auto"
-      disabled={isSubmitting || isCheckoutLoading || (!sameAsShipping && !newBillingAddress.completed)}
+      disabled={isSubmitting || isCartMutating || (!sameAsShipping && !billingAddress)}
     >
       {isSubmitting ? 'Confirming...' : (submitMessage ?? 'Confirm & Pay')}
     </SubmitButton>
@@ -132,59 +135,42 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
 
   return (
     <>
-      <Form<UpdatePaymentInput, CheckoutAction.COMPLETE_CHECKOUT>
-        id={id}
-        method="post"
-        action="/api/checkout"
-        fetcher={submitPaymentFetcher}
-        subaction={CheckoutAction.COMPLETE_CHECKOUT}
-        defaultValues={defaultValues}
-        // @ts-ignore Validator<UpdatePaymentInput>
-        validator={checkoutPaymentValidator}
-        onSubmit={handleSubmit}
-        className={className}
-      >
-        <input type="hidden" name="cartId" value={cart.id} />
-        <input type="hidden" name="providerId" value={providerId} />
+      <RemixFormProvider {...form}>
+        <completeCartFetcher.Form id={id} onSubmit={handleSubmit} className={className}>
+          <TextField type="hidden" name="cartId" value={cart.id} />
+          <TextField type="hidden" name="providerId" value={providerId} />
 
-        <h3 className="text-lg font-bold text-gray-900">Billing address</h3>
+          <h3 className="text-lg font-bold text-gray-900">Billing address</h3>
 
-        <FieldGroup>
-          <FieldCheckbox
-            name="sameAsShipping"
-            label="Same as shipping address"
-            onChange={(event) => setSameAsShipping(event.target.checked)}
-            inputProps={{ defaultChecked: sameAsShipping }}
-            className="mb-2"
-          />
-        </FieldGroup>
+          <Checkbox className="my-4" name="sameAsShipping" label="Same as shipping address" />
 
-        {!sameAsShipping && (
-          <MedusaStripeAddress mode="billing" address={billingAddress} setAddress={setNewBillingAddress} />
-        )}
+          {!sameAsShipping && (
+            <MedusaStripeAddress mode="billing" address={billingAddress} setAddress={setBillingAddress} />
+          )}
 
-        <HiddenAddressGroup address={newBillingAddress.address} prefix="billingAddress" />
+          <HiddenAddressGroup address={billingAddress} prefix="billingAddress" />
 
-        {sameAsShipping && (
-          <div className="-mt-2 mb-4">
-            <AddressDisplay address={billingAddress} countryOptions={countryOptions} />
-          </div>
-        )}
+          {sameAsShipping && (
+            <div className="-mt-2 mb-4">
+              <AddressDisplay address={shippingAddress.address} countryOptions={countryOptions} />
+            </div>
+          )}
 
-        {!hasPaymentMethods && <input type="hidden" name="paymentMethodId" value="new" />}
+          {!hasPaymentMethods && <input type="hidden" name="paymentMethodId" value="new" />}
 
-        <div className={`stripe-payment-form ${initialPaymentMethodId !== 'new' ? 'hidden' : ''}`}>{children}</div>
+          <div className={`stripe-payment-form ${initialPaymentMethodId !== 'new' ? 'hidden' : ''}`}>{children}</div>
 
-        <FormError />
-      </Form>
+          <FormError />
+        </completeCartFetcher.Form>
 
-      <div className="block lg:hidden">
-        <CheckoutOrderSummary name="checkout" submitButton={<PaymentSubmitButton />} />
-      </div>
+        <div className="block lg:hidden">
+          <CheckoutOrderSummary name="checkout" submitButton={<PaymentSubmitButton />} />
+        </div>
 
-      <div className="hidden lg:block">
-        <PaymentSubmitButton />
-      </div>
+        <div className="hidden lg:block">
+          <PaymentSubmitButton />
+        </div>
+      </RemixFormProvider>
     </>
   );
 };

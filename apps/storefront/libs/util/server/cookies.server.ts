@@ -1,4 +1,4 @@
-import { Cookie } from '@remix-run/node';
+import { Cookie } from 'react-router';
 import { authCookie } from './auth.server';
 
 export async function setCookie(headers: Headers, cookie: Cookie | string, value: string) {

@@ -1,75 +1,37 @@
-import HomeIcon from '@heroicons/react/24/solid/HomeIcon';
-import { useCart } from '@app/hooks/useCart';
-import { useRegion } from '@app/hooks/useRegion';
-import { ProductImageGallery } from '@app/components/product/ProductImageGallery';
-import { ProductPrice } from '@app/components/product/ProductPrice';
-import { ProductPriceRange } from '@app/components/product/ProductPriceRange';
 import { Breadcrumb, Breadcrumbs } from '@app/components/common/breadcrumbs/Breadcrumbs';
 import { Button } from '@app/components/common/buttons/Button';
-import { SubmitButton } from '@app/components/common/buttons/SubmitButton';
 import { Container } from '@app/components/common/container/Container';
-import { Form } from '@app/components/common/forms/Form';
-import { FormError } from '@app/components/common/forms/FormError';
-import { FieldGroup } from '@app/components/common/forms/fields/FieldGroup';
+import { FieldLabel } from '@app/components/common/forms/fields/FieldLabel';
 import { Grid } from '@app/components/common/grid/Grid';
 import { GridColumn } from '@app/components/common/grid/GridColumn';
-import { Share } from '@app/components/share';
-import { Link, useFetcher } from '@remix-run/react';
-import { withYup } from '@remix-validated-form/with-yup';
-import truncate from 'lodash/truncate';
-import { useEffect, useMemo, useRef, useState, type ChangeEvent, useCallback } from 'react';
-import * as Yup from 'yup';
+import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
+import { QuantitySelector } from '@app/components/common/remix-hook-form/field-groups/QuantitySelector';
+import { ProductImageGallery } from '@app/components/product/ProductImageGallery';
+import { ProductOptionSelectorRadio } from '@app/components/product/ProductOptionSelectorRadio';
 import { ProductOptionSelectorSelect } from '@app/components/product/ProductOptionSelectorSelect';
-import { LineItemActions } from '@app/routes/api.cart.line-items';
+import { ProductPrice } from '@app/components/product/ProductPrice';
+import { ProductPriceRange } from '@app/components/product/ProductPriceRange';
+import { ProductReviewStars } from '@app/components/reviews/ProductReviewStars';
+import { Share } from '@app/components/share';
+import { useCart } from '@app/hooks/useCart';
+import { useProductInventory } from '@app/hooks/useProductInventory';
+import { useRegion } from '@app/hooks/useRegion';
+import { createLineItemSchema } from '@app/routes/api.cart.line-items.create';
+import HomeIcon from '@heroicons/react/24/solid/HomeIcon';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { StoreProductReviewStats } from '@lambdacurry/medusa-plugins-sdk';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 import {
   getFilteredOptionValues,
   getOptionValuesWithDiscountLabels,
   selectVariantFromMatrixBySelectedOptions,
   selectVariantMatrix,
 } from '@libs/util/products';
-import { useProductInventory } from '@app/hooks/useProductInventory';
-import { FieldLabel } from '@app/components/common/forms/fields/FieldLabel';
-import { ProductOptionSelectorRadio } from '@app/components/product/ProductOptionSelectorRadio';
-import { QuantitySelector } from '@app/components/common/field-groups/QuantitySelector';
 import { StoreProduct, StoreProductOptionValue, StoreProductVariant } from '@medusajs/types';
-import { Validator } from 'remix-validated-form';
-import { StoreProductReview, StoreProductReviewStats } from '@lambdacurry/medusa-plugins-sdk';
-import { ProductReviewStars } from '@app/components/reviews/ProductReviewStars';
-import { formatPrice, getCheapestProductVariant, getVariantFinalPrice } from '@libs/util/prices';
-
-export interface AddToCartFormValues {
-  productId: string;
-  quantity?: number;
-  options: {
-    [key: string]: string;
-  };
-}
-
-/**
- * Creates a validator for the add to cart form based on product options
- * @param product - The product to create the validator for
- * @returns A validator for the add to cart form
- */
-export const getAddToCartValidator = (product: StoreProduct): Validator<AddToCartFormValues> => {
-  const optionsValidation = product.options!.reduce(
-    (acc, option) => {
-      if (!option.id) return acc;
-
-      acc[option.id] = Yup.string().required(`${option.title} is required`);
-
-      return acc;
-    },
-    {} as { [key: string]: Yup.Schema<string> },
-  );
-
-  const schemaShape: Record<keyof AddToCartFormValues, Yup.AnySchema> = {
-    productId: Yup.string().required('Product ID is required'),
-    quantity: Yup.number().optional(),
-    options: Yup.object().shape(optionsValidation),
-  };
-
-  return withYup(Yup.object().shape(schemaShape)) as Validator<AddToCartFormValues>;
-};
+import truncate from 'lodash/truncate';
+import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useFetcher } from 'react-router';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 
 /**
  * Generates breadcrumbs for a product page
@@ -120,22 +82,17 @@ const variantIsSoldOut: (variant: StoreProductVariant | undefined) => boolean = 
 
 export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductTemplateProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const addToCartFetcher = useFetcher<any>();
+  const addToCartFetcher = useFetcher<any>({ key: FetcherKeys.cart.createLineItem });
   const { toggleCartDrawer } = useCart();
   const { region } = useRegion();
-  const hasErrors = Object.keys(addToCartFetcher.data?.fieldErrors || {}).length > 0;
-
-  // Detect form submission as early as possible
-  const isFormSubmitting = addToCartFetcher.formAction?.includes('/api/cart/line-items');
+  const hasErrors = Object.keys(addToCartFetcher.data?.errors || {}).length > 0;
 
   // Combine both states to detect adding items as early as possible
-  const isAddingToCart = isFormSubmitting || ['submitting', 'loading'].includes(addToCartFetcher.state);
-
-  const validator = getAddToCartValidator(product);
+  const isAddingToCart = ['submitting', 'loading'].includes(addToCartFetcher.state);
 
   const defaultValues = {
     productId: product.id!,
-    quantity: 1,
+    quantity: '1',
     options: useMemo(() => {
       // Get the first variant as the default
       const firstVariant = product.variants?.[0];
@@ -166,6 +123,17 @@ export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductT
       );
     }, [product]),
   };
+
+  const form = useRemixForm({
+    resolver: zodResolver(createLineItemSchema),
+    defaultValues,
+    fetcher: addToCartFetcher,
+    submitConfig: {
+      method: 'post',
+      action: '/api/cart/line-items/create',
+      encType: 'multipart/form-data',
+    },
+  });
 
   const breadcrumbs = getBreadcrumbs(product);
   const currencyCode = region.currency_code;
@@ -281,11 +249,13 @@ export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductT
     const newValue = e.target.value;
     const newOptions = updateControlledOptions(controlledOptions, changedOptionId, newValue);
     setControlledOptions(newOptions);
+    form.setValue('options', newOptions);
   };
 
   const handleOptionChangeByRadio = (name: string, value: string) => {
     const newOptions = updateControlledOptions(controlledOptions, name, value);
     setControlledOptions(newOptions);
+    form.setValue('options', newOptions);
   };
 
   useEffect(() => {
@@ -333,182 +303,177 @@ export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductT
   return (
     <>
       <section className="pb-12 pt-12 xl:pt-24 min-h-screen">
-        <Form<AddToCartFormValues, LineItemActions.CREATE>
-          id="addToCartForm"
-          formRef={formRef}
-          fetcher={addToCartFetcher}
-          encType="multipart/form-data"
-          method="post"
-          action={`/api/cart/line-items`}
-          subaction={LineItemActions.CREATE}
-          defaultValues={defaultValues}
-          validator={validator}
-          onSubmit={handleAddToCart}
-        >
-          <input type="hidden" name="productId" value={product.id} />
+        <RemixFormProvider {...form}>
+          <addToCartFetcher.Form
+            id="addToCartForm"
+            ref={formRef}
+            method="post"
+            action="/api/cart/line-items/create"
+            onSubmit={handleAddToCart}
+          >
+            <input type="hidden" name="productId" value={product.id} />
 
-          <Container className="px-0 sm:px-6 md:px-8">
-            <Grid>
-              <GridColumn>
-                <div className="md:py-6">
-                  <Grid className="!gap-0">
-                    <GridColumn className="mb-8 md:col-span-6 lg:col-span-7 xl:pr-16 xl:pl-9">
-                      <ProductImageGallery key={product.id} product={product} />
-                    </GridColumn>
+            <Container className="px-0 sm:px-6 md:px-8">
+              <Grid>
+                <GridColumn>
+                  <div className="md:py-6">
+                    <Grid className="!gap-0">
+                      <GridColumn className="mb-8 md:col-span-6 lg:col-span-7 xl:pr-16 xl:pl-9">
+                        <ProductImageGallery key={product.id} product={product} />
+                      </GridColumn>
 
-                    <GridColumn className="flex flex-col md:col-span-6 lg:col-span-5">
-                      <div className="px-0 sm:px-6 md:p-10 md:pt-0">
-                        <div>
-                          <Breadcrumbs className="mb-6 text-primary" breadcrumbs={breadcrumbs} />
+                      <GridColumn className="flex flex-col md:col-span-6 lg:col-span-5">
+                        <div className="px-0 sm:px-6 md:p-10 md:pt-0">
+                          <div>
+                            <Breadcrumbs className="mb-6 text-primary" breadcrumbs={breadcrumbs} />
 
-                          <header className="flex gap-4 mb-2">
-                            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:tracking-tight">
-                              {product.title}
-                            </h1>
-                            <div className="flex-1" />
-                            <Share
-                              itemType="product"
-                              shareData={{
-                                title: product.title,
-                                text: truncate(product.description || 'Check out this product', {
-                                  length: 200,
-                                  separator: ' ',
-                                }),
-                              }}
-                            />
-                          </header>
-                        </div>
-
-                        <ProductReviewStars reviewsCount={reviewsCount} reviewStats={reviewStats} />
-
-                        <section aria-labelledby="product-information" className="mt-4">
-                          <h2 id="product-information" className="sr-only">
-                            Product information
-                          </h2>
-
-                          <p className="text-lg text-gray-900 sm:text-xl flex gap-3">
-                            {selectedVariant ? (
-                              <ProductPrice product={product} variant={selectedVariant} currencyCode={currencyCode} />
-                            ) : (
-                              <ProductPriceRange product={product} currencyCode={currencyCode} />
-                            )}
-                          </p>
-                        </section>
-
-                        {productSelectOptions && productSelectOptions.length > 5 && (
-                          <section aria-labelledby="product-options" className="product-options">
-                            <h2 id="product-options" className="sr-only">
-                              Product options
-                            </h2>
-
-                            <FieldGroup>
-                              {productSelectOptions.map((option, optionIndex) => (
-                                <ProductOptionSelectorSelect
-                                  key={optionIndex}
-                                  option={option}
-                                  value={controlledOptions[option.id]}
-                                  onChange={handleOptionChangeBySelect}
-                                  currencyCode={currencyCode}
-                                />
-                              ))}
-                            </FieldGroup>
-                          </section>
-                        )}
-
-                        {productSelectOptions && productSelectOptions.length <= 5 && (
-                          <section aria-labelledby="product-options" className="product-options my-6 grid gap-4">
-                            <h2 id="product-options" className="sr-only">
-                              Product options
-                            </h2>
-                            {productSelectOptions.map((option, optionIndex) => (
-                              <div key={optionIndex}>
-                                <FieldLabel className="mb-2">{option.title}</FieldLabel>
-                                <ProductOptionSelectorRadio
-                                  option={option}
-                                  value={controlledOptions[option.id]}
-                                  onChange={handleOptionChangeByRadio}
-                                  currencyCode={currencyCode}
-                                />
-                              </div>
-                            ))}
-                          </section>
-                        )}
-
-                        <FormError />
-
-                        <div className="my-2 flex flex-col gap-2">
-                          <div className="flex items-center gap-4 py-2">
-                            {!soldOut && <QuantitySelector variant={selectedVariant} />}
-                            <div className="flex-1">
-                              {!soldOut ? (
-                                <SubmitButton className="!h-12 w-full whitespace-nowrap !text-base !font-bold">
-                                  {isAddingToCart ? 'Adding...' : 'Add to cart'}
-                                </SubmitButton>
-                              ) : (
-                                <SubmitButton
-                                  disabled
-                                  className="pointer-events-none !h-12 w-full !text-base !font-bold opacity-50"
-                                >
-                                  Sold out
-                                </SubmitButton>
-                              )}
-                            </div>
+                            <header className="flex gap-4 mb-2">
+                              <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:tracking-tight">
+                                {product.title}
+                              </h1>
+                              <div className="flex-1" />
+                              <Share
+                                itemType="product"
+                                shareData={{
+                                  title: product.title,
+                                  text: truncate(product.description || 'Check out this product', {
+                                    length: 200,
+                                    separator: ' ',
+                                  }),
+                                }}
+                              />
+                            </header>
                           </div>
 
-                          {!!product.description && (
-                            <div className="mt-4">
-                              <h3 className="mb-2">Description</h3>
-                              <div className="whitespace-pre-wrap text-base text-primary-800">
-                                {product.description}
+                          <ProductReviewStars reviewsCount={reviewsCount} reviewStats={reviewStats} />
+
+                          <section aria-labelledby="product-information" className="mt-4">
+                            <h2 id="product-information" className="sr-only">
+                              Product information
+                            </h2>
+
+                            <p className="text-lg text-gray-900 sm:text-xl flex gap-3">
+                              {selectedVariant ? (
+                                <ProductPrice product={product} variant={selectedVariant} currencyCode={currencyCode} />
+                              ) : (
+                                <ProductPriceRange product={product} currencyCode={currencyCode} />
+                              )}
+                            </p>
+                          </section>
+
+                          {productSelectOptions && productSelectOptions.length > 5 && (
+                            <section aria-labelledby="product-options" className="product-options">
+                              <h2 id="product-options" className="sr-only">
+                                Product options
+                              </h2>
+
+                              <div className="space-y-4">
+                                {productSelectOptions.map((option, optionIndex) => (
+                                  <ProductOptionSelectorSelect
+                                    key={optionIndex}
+                                    option={option}
+                                    value={controlledOptions[option.id]}
+                                    onChange={handleOptionChangeBySelect}
+                                    currencyCode={currencyCode}
+                                  />
+                                ))}
+                              </div>
+                            </section>
+                          )}
+
+                          {productSelectOptions && productSelectOptions.length <= 5 && (
+                            <section aria-labelledby="product-options" className="product-options my-6 grid gap-4">
+                              <h2 id="product-options" className="sr-only">
+                                Product options
+                              </h2>
+                              {productSelectOptions.map((option, optionIndex) => (
+                                <div key={optionIndex}>
+                                  <FieldLabel className="mb-2">{option.title}</FieldLabel>
+                                  <ProductOptionSelectorRadio
+                                    option={option}
+                                    value={controlledOptions[option.id]}
+                                    onChange={handleOptionChangeByRadio}
+                                    currencyCode={currencyCode}
+                                  />
+                                </div>
+                              ))}
+                            </section>
+                          )}
+
+                          <div className="my-2 flex flex-col gap-2">
+                            <div className="flex items-center gap-4 py-2">
+                              {!soldOut && <QuantitySelector variant={selectedVariant} />}
+                              <div className="flex-1">
+                                {!soldOut ? (
+                                  <SubmitButton className="!h-12 w-full whitespace-nowrap !text-base !font-bold">
+                                    {isAddingToCart ? 'Adding...' : 'Add to cart'}
+                                  </SubmitButton>
+                                ) : (
+                                  <SubmitButton
+                                    disabled
+                                    className="pointer-events-none !h-12 w-full !text-base !font-bold opacity-50"
+                                  >
+                                    Sold out
+                                  </SubmitButton>
+                                )}
                               </div>
                             </div>
-                          )}
 
-                          {product.categories && product.categories.length > 0 && (
-                            <nav aria-label="Categories" className="mt-4">
-                              <h3 className="mb-2">Categories</h3>
+                            {!!product.description && (
+                              <div className="mt-4">
+                                <h3 className="mb-2">Description</h3>
+                                <div className="whitespace-pre-wrap text-base text-primary-800">
+                                  {product.description}
+                                </div>
+                              </div>
+                            )}
 
-                              <ol className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                                {product.categories.map((category, categoryIndex) => (
-                                  <li key={categoryIndex}>
-                                    <Button
-                                      as={(buttonProps) => (
-                                        <Link to={`/categories/${category.handle}`} {...buttonProps} />
-                                      )}
-                                      className="!h-auto whitespace-nowrap !rounded !px-2 !py-1 !text-xs !font-bold"
-                                    >
-                                      {category.name}
-                                    </Button>
-                                  </li>
-                                ))}
-                              </ol>
-                            </nav>
-                          )}
+                            {product.categories && product.categories.length > 0 && (
+                              <nav aria-label="Categories" className="mt-4">
+                                <h3 className="mb-2">Categories</h3>
 
-                          {product.tags && product.tags.length > 0 && (
-                            <nav aria-label="Tags" className="mt-4">
-                              <h3 className="mb-2">Tags</h3>
+                                <ol className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                                  {product.categories.map((category, categoryIndex) => (
+                                    <li key={categoryIndex}>
+                                      <Button
+                                        as={(buttonProps) => (
+                                          <Link to={`/categories/${category.handle}`} {...buttonProps} />
+                                        )}
+                                        className="!h-auto whitespace-nowrap !rounded !px-2 !py-1 !text-xs !font-bold"
+                                      >
+                                        {category.name}
+                                      </Button>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </nav>
+                            )}
 
-                              <ol className="flex flex-wrap items-center gap-2 text-xs text-primary">
-                                {product.tags.map((tag, tagIndex) => (
-                                  <li key={tagIndex}>
-                                    <Button className="!h-auto whitespace-nowrap !rounded !px-2 !py-1 !text-xs !font-bold bg-accent-900 cursor-default">
-                                      {tag.value}
-                                    </Button>
-                                  </li>
-                                ))}
-                              </ol>
-                            </nav>
-                          )}
+                            {product.tags && product.tags.length > 0 && (
+                              <nav aria-label="Tags" className="mt-4">
+                                <h3 className="mb-2">Tags</h3>
+
+                                <ol className="flex flex-wrap items-center gap-2 text-xs text-primary">
+                                  {product.tags.map((tag, tagIndex) => (
+                                    <li key={tagIndex}>
+                                      <Button className="!h-auto whitespace-nowrap !rounded !px-2 !py-1 !text-xs !font-bold bg-accent-900 cursor-default">
+                                        {tag.value}
+                                      </Button>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </nav>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </GridColumn>
-                  </Grid>
-                </div>
-              </GridColumn>
-            </Grid>
-          </Container>
-        </Form>
+                      </GridColumn>
+                    </Grid>
+                  </div>
+                </GridColumn>
+              </Grid>
+            </Container>
+          </addToCartFetcher.Form>
+        </RemixFormProvider>
       </section>
     </>
   );

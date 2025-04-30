@@ -1,5 +1,5 @@
 import ChevronDownIcon from '@heroicons/react/24/solid/ChevronDownIcon';
-import { NavLink } from '@remix-run/react';
+import { NavLink } from 'react-router';
 import clsx from 'clsx';
 import type { FC } from 'react';
 import { Button } from '@app/components/common/buttons/Button';

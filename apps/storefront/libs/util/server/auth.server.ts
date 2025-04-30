@@ -1,4 +1,4 @@
-import { createCookie } from '@remix-run/node';
+import { createCookie } from 'react-router';
 import { getCookie } from './cookies.server';
 import { config } from './config.server';
 

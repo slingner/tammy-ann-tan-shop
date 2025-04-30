@@ -3,7 +3,7 @@ import { Image } from '@app/components/common/images/Image';
 import { LineItemQuantitySelect } from '@app/components/cart/line-items/LineItemQuantitySelect';
 import { useRemoveCartItem } from '@app/hooks/useRemoveCartItem';
 import { formatPrice } from '@libs/util/prices';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { FC } from 'react';
 import { StoreCart, StoreCartLineItem } from '@medusajs/types';
 import { useCheckout } from '@app/hooks/useCheckout';

@@ -1,6 +1,6 @@
 import { sdk } from '@libs/util/server/client.server';
 import { buildSitemapUrlSetXML, SitemapUrl } from '@libs/util/xml/sitemap-builder';
-import { LoaderFunctionArgs } from '@remix-run/node';
+import { LoaderFunctionArgs } from 'react-router';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { products } = await sdk.store.product.list({

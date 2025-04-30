@@ -91,17 +91,17 @@ export interface SiteSettings {
 }
 
 export interface Address {
-  firstName: string;
-  lastName: string;
-  company?: string | null;
-  address1: string;
-  address2?: string | null;
-  city: string;
-  province: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  address1?: string;
+  address2?: string;
+  city?: string;
+  province?: string;
   countryCode: string;
   postalCode: string;
-  phone?: string | null;
-  country?: string | null;
+  phone?: string;
+  country?: string;
 }
 
 export type MedusaAddress = Omit<BaseAddress, 'id' | 'customer_id'>;

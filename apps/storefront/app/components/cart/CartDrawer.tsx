@@ -6,7 +6,7 @@ import { useCart } from '@app/hooks/useCart';
 import { IconButton } from '@app/components/common/buttons/IconButton';
 import { ButtonLink } from '@app/components/common/buttons/ButtonLink';
 import { Button } from '@app/components/common/buttons/Button';
-import { useNavigate, useFetchers } from '@remix-run/react';
+import { useNavigate, useFetchers } from 'react-router';
 import { useRegion } from '@app/hooks/useRegion';
 import { CartDrawerItem } from './CartDrawerItem';
 import clsx from 'clsx';
@@ -156,9 +156,7 @@ export const CartDrawer: FC = () => {
 
   // Track if any cart-related fetchers are active
   const isCartLoading = allFetchers.some(
-    (f) =>
-      (f.state === 'submitting' || f.state === 'loading') &&
-      (f.formAction?.includes('/api/cart') || f.formData?.get('action') === 'add-to-cart'),
+    (f) => (f.state === 'submitting' || f.state === 'loading') && f.key.startsWith('cart:'),
   );
 
   // Local state to control the dialog - initialize with cartDrawerOpen

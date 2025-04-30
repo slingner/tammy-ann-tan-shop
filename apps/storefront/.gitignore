@@ -9,3 +9,5 @@ vite.config.ts.timestamp-*.mjs
 
 .yalc
 yalc.lock
+
+.react-router

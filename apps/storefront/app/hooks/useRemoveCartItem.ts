@@ -1,25 +1,13 @@
-import { useFetcher } from '@remix-run/react';
-import { useEffect } from 'react';
-import { useCart } from './useCart';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 import { StoreCart, StoreCartLineItem } from '@medusajs/types';
-import { LineItemActions } from '@app/routes/api.cart.line-items';
+import { useFetcher } from 'react-router';
 
-export const useRemoveCartItem = (callback?: () => void) => {
-  const fetcher = useFetcher<{ cart: StoreCart }>();
-  const { cart } = useCart();
+export const useRemoveCartItem = () => {
+  const fetcher = useFetcher<{ cart: StoreCart }>({ key: FetcherKeys.cart.removeLineItem });
 
-  const submit = ({ id: lineItemId, cart_id: cartId }: StoreCartLineItem) => {
-    fetcher.submit(
-      { lineItemId, cartId, subaction: LineItemActions.DELETE },
-      { method: 'delete', action: '/api/cart/line-items' },
-    );
+  const submit = ({ id: lineItemId }: StoreCartLineItem) => {
+    fetcher.submit({ lineItemId }, { method: 'delete', action: '/api/cart/line-items/delete' });
   };
-
-  useEffect(() => {
-    if (fetcher.data?.cart && cart) {
-      callback?.();
-    }
-  }, [fetcher.data]);
 
   return { fetcher, state: fetcher.state, submit };
 };

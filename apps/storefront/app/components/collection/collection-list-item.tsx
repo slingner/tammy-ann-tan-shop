@@ -1,4 +1,4 @@
-import { Await, Link } from '@remix-run/react';
+import { Await, Link } from 'react-router';
 import { Suspense, type FC } from 'react';
 import ProductCarousel from '../product/ProductCarousel';
 import { ProductCarouselSkeleton } from '../product/ProductCarouselSkeleton';

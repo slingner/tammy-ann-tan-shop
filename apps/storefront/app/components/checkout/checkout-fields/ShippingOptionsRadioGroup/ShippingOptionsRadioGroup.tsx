@@ -1,59 +1,57 @@
 import { FC } from 'react';
-import { useControlField, useField } from 'remix-validated-form';
-import { RadioGroup } from '@headlessui/react';
+import { RadioGroup } from '@lambdacurry/forms/ui';
 import { ShippingOptionsRadioGroupOption } from './ShippingOptionsRadioGroupOption';
-import { FieldError } from '@app/components/common/forms/fields/FieldError';
-import { Fetcher, useFetchers } from '@remix-run/react';
-import clsx from 'clsx';
-import { StoreCartShippingOption, StoreRegion } from '@medusajs/types';
+import { useRemixFormContext } from 'remix-hook-form';
+import { clsx } from 'clsx';
+import { StoreRegion } from '@medusajs/types';
+import { StoreCartShippingOption } from '@medusajs/types';
 
 export interface ShippingOptionsRadioGroupProps {
   name: string;
   shippingOptions: StoreCartShippingOption[];
   region: StoreRegion;
-  onChange?: (value: string) => void;
+  value?: string | null;
+  onValueChange?: (value: string) => void;
+  disabled?: boolean;
 }
 
 export const ShippingOptionsRadioGroup: FC<ShippingOptionsRadioGroupProps> = ({
   name,
   shippingOptions,
   region,
-  onChange,
+  value,
+  onValueChange,
+  disabled,
 }) => {
-  const [value, setValue] = useControlField(name, 'checkoutDeliveryMethodForm');
-  const { error, clearError } = useField(name, {
-    formId: 'checkoutDeliveryMethodForm',
-  });
-  const fetchers = useFetchers() as (Fetcher & { formAction: string })[];
-  const checkoutFetchers = fetchers.filter(
-    (f) => f.formAction && (f.formAction === '/api/checkout' || f.formAction === '/api/cart/line-items'),
-  );
-  const isCheckoutLoading = checkoutFetchers.some((fetcher) => ['submitting', 'loading'].includes(fetcher.state));
+  const form = useRemixFormContext();
+  const isSubmitting = form.formState.isSubmitting;
 
-  const handleChange = (value: string) => {
-    setValue(value);
-    clearError();
-    if (typeof onChange === 'function') onChange(value);
+  const handleChange = async (newValue: string) => {
+    if (isSubmitting) return;
+    onValueChange?.(newValue);
+
+    try {
+      await form.handleSubmit();
+    } catch (error) {
+      console.error('Failed to submit shipping option:', error);
+    }
   };
 
-  return (
-    <>
-      <RadioGroup
-        className={clsx({ 'pointer-events-none': isCheckoutLoading })}
-        name={name}
-        defaultChecked={true}
-        value={value}
-        defaultValue={shippingOptions[0].id}
-        onChange={handleChange}
-      >
-        <div className="xs:grid-cols-2 my-6 grid grid-cols-1 gap-4">
-          {shippingOptions.map((shippingOption) => (
-            <ShippingOptionsRadioGroupOption key={shippingOption.id} shippingOption={shippingOption} region={region} />
-          ))}
-        </div>
-      </RadioGroup>
+  if (!shippingOptions.length) {
+    return <div>No shipping options available</div>;
+  }
 
-      <FieldError error={error} />
-    </>
+  return (
+    <RadioGroup
+      name={name}
+      value={value ?? ''}
+      onValueChange={handleChange}
+      className={clsx('xs:grid-cols-2 my-6 grid grid-cols-1 gap-4', isSubmitting && 'pointer-events-none')}
+      disabled={isSubmitting || disabled}
+    >
+      {shippingOptions.map((shippingOption) => (
+        <ShippingOptionsRadioGroupOption key={shippingOption.id} shippingOption={shippingOption} region={region} />
+      ))}
+    </RadioGroup>
   );
 };

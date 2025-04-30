@@ -1,16 +1,14 @@
-import { FC, useEffect, useRef, useState } from 'react';
-import { AddDiscountCodeInput, CheckoutAction } from '@app/routes/api.checkout';
-import { checkoutAddDiscountCodeValidator } from '../checkout-form-helpers';
-import { FetcherWithComponents, useFetcher } from '@remix-run/react';
-import { RemovePromotionCodeButton } from './RemoveDiscountCodeButton';
 import { ButtonLink } from '@app/components/common/buttons/ButtonLink';
-import { Form } from '@app/components/common/forms/Form';
-import { FieldLabel } from '@app/components/common/forms/fields/FieldLabel';
-import { FieldGroup } from '@app/components/common/forms/fields/FieldGroup';
-import { FieldText } from '@app/components/common/forms/fields/FieldText';
-import { SubmitButton } from '@app/components/common/buttons/SubmitButton';
-import { FormError } from '@app/components/common/forms/FormError';
+import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
+import { FormError } from '@app/components/common/remix-hook-form/forms/FormError';
+import { StyledTextField } from '@app/components/common/remix-hook-form/forms/fields/StyledTextField';
+import { discountCodeSchema } from '@app/routes/api.checkout.discount-code';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HttpTypes, PromotionDTO } from '@medusajs/types';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useFetcher } from 'react-router';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { RemovePromotionCodeButton } from './RemoveDiscountCodeButton';
 
 export interface CheckoutOrderSummaryDiscountCodeProps {
   cart: HttpTypes.StoreCart & { promotions: PromotionDTO[] };
@@ -20,23 +18,30 @@ export const CheckoutOrderSummaryDiscountCode: FC<CheckoutOrderSummaryDiscountCo
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fetcher = useFetcher<{
-    fieldErrors?: { [key: string]: string };
-  }>() as FetcherWithComponents<{
-    fieldErrors?: { [key: string]: string };
-  }>;
+    errors?: { [key: string]: string };
+  }>();
   const [isFormVisible, setIsFormVisible] = useState<boolean>(!!(cart.promotions as PromotionDTO[]).length);
   const hasDiscounts = !!cart.promotions?.length;
-  const hasErrors = Object.keys(fetcher.data?.fieldErrors || {}).length > 0;
+  const hasErrors = Object.keys(fetcher.data?.errors || {}).length > 0;
   const isSubmitting = ['submitting', 'loading'].includes(fetcher.state);
 
-  const defaultValues: AddDiscountCodeInput = {
-    cartId: cart.id,
-    code: '',
-  };
+  const form = useRemixForm({
+    resolver: zodResolver(discountCodeSchema),
+    defaultValues: {
+      cartId: cart.id,
+      code: '',
+    },
+
+    fetcher,
+    submitConfig: {
+      method: 'post',
+      action: '/api/checkout/discount-code',
+    },
+  });
 
   useEffect(() => {
     if (!isSubmitting && !hasErrors) {
-      formRef.current?.reset();
+      form.reset();
       inputRef.current?.focus();
     }
   }, [isSubmitting, hasErrors]);
@@ -58,34 +63,23 @@ export const CheckoutOrderSummaryDiscountCode: FC<CheckoutOrderSummaryDiscountCo
 
       {isFormVisible && (
         <>
-          <Form<AddDiscountCodeInput, CheckoutAction.ADD_DISCOUNT_CODE>
-            formRef={formRef}
-            id="CheckoutorderSummaryDiscountCodeForm"
-            method="post"
-            action="/api/checkout"
-            fetcher={fetcher}
-            subaction={CheckoutAction.ADD_DISCOUNT_CODE}
-            defaultValues={defaultValues}
-            validator={checkoutAddDiscountCodeValidator}
-          >
-            <input type="hidden" name="cartId" value={cart.id} />
-            <FieldLabel htmlFor="code" className="sr-only">
-              Discount code
-            </FieldLabel>
-            <FieldGroup className="!my-0 !flex items-start gap-1">
-              <FieldText
-                inputRef={inputRef}
-                name="code"
-                className="flex-grow"
-                placeholder="Discount code"
-                aria-label="discount code"
-              />
-              <SubmitButton className="flex-shrink-0 flex-grow-0">
-                {isSubmitting ? 'Applying...' : 'Apply'}
-              </SubmitButton>
-            </FieldGroup>
-            <FormError className="mb-0" />
-          </Form>
+          <RemixFormProvider {...form}>
+            <fetcher.Form ref={formRef} onSubmit={form.handleSubmit}>
+              <input type="hidden" name="cartId" value={cart.id} />
+              <div className="!my-0 !flex items-start gap-1">
+                <StyledTextField
+                  name="code"
+                  className="flex-grow"
+                  placeholder="Discount code"
+                  aria-label="discount code"
+                />
+                <SubmitButton type="submit" className="flex-shrink-0 flex-grow-0" disabled={isSubmitting}>
+                  {isSubmitting ? 'Applying...' : 'Apply'}
+                </SubmitButton>
+              </div>
+              <FormError />
+            </fetcher.Form>
+          </RemixFormProvider>
 
           {hasDiscounts && (
             <div className="mt-2">

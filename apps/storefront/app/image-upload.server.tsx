@@ -1,5 +1,9 @@
-import { UploadHandler, unstable_composeUploadHandlers, unstable_createMemoryUploadHandler } from '@remix-run/node';
-import { unstable_createFileUploadHandler } from '@remix-run/node';
+import {
+  UploadHandler,
+  unstable_composeUploadHandlers,
+  unstable_createMemoryUploadHandler,
+} from 'react-router';
+import { unstable_createFileUploadHandler } from 'react-router';
 
 export const standardFileUploadHandler = unstable_composeUploadHandlers(
   unstable_createFileUploadHandler({
