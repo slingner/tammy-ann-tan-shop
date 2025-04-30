@@ -2,6 +2,7 @@ import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon';
 import { StoreCart, StoreCartPromotion } from '@medusajs/types';
 import { useFetcher } from 'react-router';
 import { FC } from 'react';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 export interface RemoveDiscountCodeButtonProps {
   cart: StoreCart;
@@ -9,7 +10,7 @@ export interface RemoveDiscountCodeButtonProps {
 }
 
 export const RemovePromotionCodeButton: FC<RemoveDiscountCodeButtonProps> = ({ cart, promotion }) => {
-  const fetcher = useFetcher<{}>({ key: 'cart:remove-promotion-code' });
+  const fetcher = useFetcher<{}>({ key: FetcherKeys.cart.removePromotionCode });
 
   if (['submitting', 'loading'].includes(fetcher.state)) return null;
 
