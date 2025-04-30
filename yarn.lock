@@ -4634,6 +4634,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mjackson/file-storage@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "@mjackson/file-storage@npm:0.6.1"
+  dependencies:
+    "@mjackson/lazy-file": "npm:^3.3.1"
+  checksum: 10c0/2fcb56ab8df1a8666a14813e6e1b7ceb144f4dca364c9ba5be886033798cf9995252194c2e64a256ebc709b5dfa0517a8e0c6ab60123962ded7e9bce825a35cf
+  languageName: node
+  linkType: hard
+
+"@mjackson/form-data-parser@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "@mjackson/form-data-parser@npm:0.7.0"
+  dependencies:
+    "@mjackson/multipart-parser": "npm:^0.8.0"
+  checksum: 10c0/484b830bd4f385958bfc7973293e771afd5072a38594f841a8ee454ca81c3fa10ad37f06bfb1f1ae95f66674b101ea7d0c6cff6ca72951694ba30c8968796e20
+  languageName: node
+  linkType: hard
+
+"@mjackson/headers@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@mjackson/headers@npm:0.10.0"
+  checksum: 10c0/eafc2c18aecc6bbd0905de8bec8e53ea3b2de840841cfac5892b6bbca3d9fd50573d0e248e10ba502264618ed0bdf5687b3282949ecc36a746a792d1d5d61752
+  languageName: node
+  linkType: hard
+
+"@mjackson/lazy-file@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "@mjackson/lazy-file@npm:3.3.1"
+  dependencies:
+    mrmime: "npm:^2.0.0"
+  checksum: 10c0/b9966ac25ec042bab6bc002563087d9e41968ef3e1bfbca1f6cccd9bdcf087bfdb86a13f505103235635e44eaddff130f03e64bdbaaf9bfa604cbaf6abba89cf
+  languageName: node
+  linkType: hard
+
+"@mjackson/multipart-parser@npm:^0.8.0":
+  version: 0.8.2
+  resolution: "@mjackson/multipart-parser@npm:0.8.2"
+  dependencies:
+    "@mjackson/headers": "npm:^0.10.0"
+  checksum: 10c0/072740c83eb2f173f12fd7f2f148aaea7f531dd11e68643d07a665f187de691d221a18bc45e4812010873a0c0ac663a5e1d29c34c0dfd39d01c3d1aa7e6c9c78
+  languageName: node
+  linkType: hard
+
 "@mole-inc/bin-wrapper@npm:^8.0.1":
   version: 8.0.1
   resolution: "@mole-inc/bin-wrapper@npm:8.0.1"
@@ -10035,6 +10078,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remix-run/fs-routes@npm:^2.16.5":
+  version: 2.16.5
+  resolution: "@remix-run/fs-routes@npm:2.16.5"
+  peerDependencies:
+    "@remix-run/dev": ^2.16.5
+    "@remix-run/route-config": ^2.16.5
+    typescript: ^5.1.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/19b582065768cd4ef8925aca50c2214ccf50fb5dbfb4a9e877ef548544f920de5a75c2ebc83bb37bb46307a5b206c83ade435a9559118845cd23c31ad729b1af
+  languageName: node
+  linkType: hard
+
 "@remix-run/node@npm:2.15.0":
   version: 2.15.0
   resolution: "@remix-run/node@npm:2.15.0"
@@ -10092,6 +10149,21 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/4f8dd3c11f4fbba44c41c333f1f6153ae34e533241a66ebf6fa9ef810a5a93afb52af7ecdc13d7113ac7d9e6933a4e4375582ddfecdd367855d8509d4c9e6ca7
+  languageName: node
+  linkType: hard
+
+"@remix-run/route-config@npm:^2.16.5":
+  version: 2.16.5
+  resolution: "@remix-run/route-config@npm:2.16.5"
+  dependencies:
+    lodash: "npm:^4.17.21"
+  peerDependencies:
+    "@remix-run/dev": ^2.16.5
+    typescript: ^5.1.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/893b90019139c744a6e9a5ff55884db16d67c44d3bbacabf3677feecbb195f8cddf575bc5088896941749bb79ff21231723a335f34f44f0eff718c05a081e614
   languageName: node
   linkType: hard
 
@@ -23339,6 +23411,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mrmime@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "mrmime@npm:2.0.1"
+  checksum: 10c0/af05afd95af202fdd620422f976ad67dc18e6ee29beb03dd1ce950ea6ef664de378e44197246df4c7cdd73d47f2e7143a6e26e473084b9e4aa2095c0ad1e1761
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.0.0":
   version: 2.0.0
   resolution: "ms@npm:2.0.0"
@@ -27239,11 +27318,15 @@ __metadata:
     "@loadable/component": "npm:^5.15.3"
     "@medusajs/js-sdk": "npm:2.7.0"
     "@medusajs/types": "npm:2.7.0"
+    "@mjackson/file-storage": "npm:^0.6.1"
+    "@mjackson/form-data-parser": "npm:^0.7.0"
     "@radix-ui/react-slot": "npm:^1.0.2"
     "@remix-run/dev": "npm:2.15.0"
     "@remix-run/eslint-config": "npm:2.15.0"
+    "@remix-run/fs-routes": "npm:^2.16.5"
     "@remix-run/node": "npm:2.16.5"
     "@remix-run/react": "npm:2.16.5"
+    "@remix-run/route-config": "npm:^2.16.5"
     "@remix-run/serve": "npm:2.16.5"
     "@sentry/remix": "npm:^8.26.0"
     "@smastrom/react-rating": "npm:^1.3.2"

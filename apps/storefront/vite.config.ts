@@ -28,6 +28,7 @@ export default defineConfig({
         v3_lazyRouteDiscovery: true,
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
+        v3_routeConfig: true,
         unstable_optimizeDeps: true,
       },
     }),

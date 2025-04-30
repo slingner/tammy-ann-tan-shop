@@ -1,12 +1,11 @@
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { StoreUpsertProductReviewsDTO } from '@lambdacurry/medusa-plugins-sdk';
+import { baseMedusaConfig } from '@libs/util/server/client.server';
+import { reviewsFileUploadHandler, upsertProductReviews } from '@libs/util/server/data/product-reviews.server';
+import { parseFormData } from '@mjackson/form-data-parser';
 import { data } from '@remix-run/node';
 import { getValidatedFormData } from 'remix-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { upsertProductReviews } from '@libs/util/server/data/product-reviews.server';
-import { createReadStream } from 'fs';
-import { baseMedusaConfig } from '@libs/util/server/client.server';
-import type { NodeOnDiskFile } from '@remix-run/node';
-import { StoreUpsertProductReviewsDTO } from '@lambdacurry/medusa-plugins-sdk';
+import { z } from 'zod';
 
 const schema = z.object({
   id: z.string().optional(),
@@ -18,7 +17,7 @@ const schema = z.object({
   review_request_id: z.string().optional(),
 });
 
-const uploadImages = async (_images: NodeOnDiskFile | NodeOnDiskFile[] | null | undefined): Promise<string[]> => {
+const uploadImages = async (_images: File | File[] | null | undefined): Promise<string[]> => {
   if (!_images) return [];
   if (_images && !Array.isArray(_images)) _images = [_images];
   if (!Array.isArray(_images)) return [];
@@ -29,7 +28,7 @@ const uploadImages = async (_images: NodeOnDiskFile | NodeOnDiskFile[] | null | 
   const formData = new FormData();
 
   for (const image of images) {
-    const fileBuffer = await readFileAsBuffer(image.getFilePath());
+    const fileBuffer = await image.arrayBuffer();
     const blob = new Blob([fileBuffer], { type: image.type || 'application/octet-stream' });
     formData.append('files', blob, image.name);
   }
@@ -56,31 +55,40 @@ const uploadImages = async (_images: NodeOnDiskFile | NodeOnDiskFile[] | null | 
   return data.files.map((i) => i.url);
 };
 
-async function readFileAsBuffer(filePath: string): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    const stream = createReadStream(filePath);
+// async function readFileAsBuffer(filePath: string): Promise<Buffer> {
+//   return new Promise((resolve, reject) => {
+//     const chunks: Buffer[] = [];
+//     const stream = createReadStream(filePath);
 
-    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-    stream.on('error', (err) => reject(err));
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
-}
+//     stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+//     stream.on('error', (err) => reject(err));
+//     stream.on('end', () => resolve(Buffer.concat(chunks)));
+//   });
+// }
 
 export async function action({ request }: { request: Request }) {
-  const { errors, data: formData, receivedValues } = await getValidatedFormData(request, zodResolver(schema));
+  const formData = await parseFormData(request, reviewsFileUploadHandler);
+
+  const uploads = formData.getAll('images') as File[];
+
+  // Remove images from formData before validation
+  const restFormData = new FormData();
+  for (const [key, value] of formData.entries()) {
+    if (key !== 'images') {
+      restFormData.append(key, value);
+    }
+  }
+
+  const { errors, data: parsedFormData } = await getValidatedFormData(restFormData, zodResolver(schema));
 
   if (errors) {
     return data({ errors }, { status: 400 });
   }
 
   try {
-    const { existing_images, ...upsertPayload } = formData;
+    const { existing_images, ...upsertPayload } = parsedFormData;
 
-    const formDataObj = await request.formData();
-    const images = formDataObj.getAll('images') as unknown as NodeOnDiskFile[];
-
-    const newImageUrls = await uploadImages(images);
+    const newImageUrls = await uploadImages(uploads);
 
     const existingImageUrls = existing_images?.split(',').map((url: string) => url.trim()) || [];
 
