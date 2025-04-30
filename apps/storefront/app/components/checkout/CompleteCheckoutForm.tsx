@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, TextField } from '@lambdacurry/forms/remix-hook-form';
 import { type CustomPaymentSession, type MedusaAddress } from '@libs/types';
 import { emptyAddress, medusaAddressToAddress } from '@libs/util';
-import { type Fetcher, SubmitFunction, useFetcher, useFetchers } from '@remix-run/react';
+import { type Fetcher, SubmitFunction, useFetcher, useFetchers } from 'react-router';
 import { FC, FormEvent, PropsWithChildren, useState } from 'react';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { CheckoutOrderSummary } from '.';

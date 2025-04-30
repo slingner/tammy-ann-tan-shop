@@ -1,4 +1,4 @@
-import { NavLink, useNavigation } from '@remix-run/react';
+import { NavLink, useNavigation } from 'react-router';
 import clsx from 'clsx';
 import type { FC } from 'react';
 import { ProductGridSkeleton } from './ProductGridSkeleton';

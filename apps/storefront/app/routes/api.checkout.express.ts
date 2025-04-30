@@ -10,7 +10,7 @@ import {
 } from '@libs/util/server/data/cart.server';
 import { listCartShippingOptions } from '@libs/util/server/data/fulfillment.server';
 import type { StoreCart, StoreCartShippingOption, StoreOrder } from '@medusajs/types';
-import type { ActionFunctionArgs } from '@remix-run/node';
+import type { ActionFunctionArgs } from 'react-router';
 import { getValidatedFormData } from 'remix-hook-form';
 import { z } from 'zod';
 

@@ -12,7 +12,7 @@ import type { MedusaAddress } from '@libs/types';
 import { medusaAddressToAddress } from '@libs/util';
 import { checkAccountDetailsComplete } from '@libs/util/checkout';
 import type { StoreRegion, StoreRegionCountry } from '@medusajs/types';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from 'react-router';
 import { useEffect } from 'react';
 import { FieldErrors } from 'react-hook-form';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';

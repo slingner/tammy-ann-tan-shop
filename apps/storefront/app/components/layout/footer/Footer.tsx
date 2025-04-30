@@ -8,7 +8,7 @@ import { useRegions } from '@app/hooks/useRegions';
 import { useRootLoaderData } from '@app/hooks/useRootLoaderData';
 import { useSiteDetails } from '@app/hooks/useSiteDetails';
 import { convertToFormData } from '@libs/util/forms/objectToFormData';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from 'react-router';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { StripeSecurityImage } from '../../images/StripeSecurityImage';

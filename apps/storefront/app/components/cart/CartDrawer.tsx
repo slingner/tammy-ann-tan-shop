@@ -6,7 +6,7 @@ import { useCart } from '@app/hooks/useCart';
 import { IconButton } from '@app/components/common/buttons/IconButton';
 import { ButtonLink } from '@app/components/common/buttons/ButtonLink';
 import { Button } from '@app/components/common/buttons/Button';
-import { useNavigate, useFetchers } from '@remix-run/react';
+import { useNavigate, useFetchers } from 'react-router';
 import { useRegion } from '@app/hooks/useRegion';
 import { CartDrawerItem } from './CartDrawerItem';
 import clsx from 'clsx';

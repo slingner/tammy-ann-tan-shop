@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getCartId, setSelectedRegionId } from '@libs/util/server/cookies.server';
 import { updateCart } from '@libs/util/server/data/cart.server';
 import { retrieveRegion } from '@libs/util/server/data/regions.server';
-import { ActionFunctionArgs, data } from '@remix-run/node';
+import { ActionFunctionArgs, data } from 'react-router';
 import { getValidatedFormData } from 'remix-hook-form';
 import { z } from 'zod';
 

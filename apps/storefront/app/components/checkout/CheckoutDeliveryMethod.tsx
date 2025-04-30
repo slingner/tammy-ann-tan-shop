@@ -10,7 +10,7 @@ import {
   getShippingOptionsByProfile,
 } from '@libs/util/checkout';
 import { formatPrice } from '@libs/util/prices';
-import { Fetcher, useFetcher, useFetchers } from '@remix-run/react';
+import { Fetcher, useFetcher, useFetchers } from 'react-router';
 import { FC, Fragment, useEffect, useMemo, useRef } from 'react';
 import { AddShippingMethodInput } from '@app/routes/api.checkout';
 import { CheckoutSectionHeader } from './CheckoutSectionHeader';
@@ -35,10 +35,10 @@ const getShippingOptionsDefaultValues = (
 };
 
 const getDefaultValues = (cart: StoreCart, shippingOptionsByProfile: { [key: string]: StoreCartShippingOption[] }) =>
-  ({
+  (({
     cartId: cart.id,
-    shippingOptionIds: getShippingOptionsDefaultValues(cart, shippingOptionsByProfile),
-  }) as AddShippingMethodInput;
+    shippingOptionIds: getShippingOptionsDefaultValues(cart, shippingOptionsByProfile)
+  }) as AddShippingMethodInput);
 
 export const CheckoutDeliveryMethod: FC = () => {
   const fetcher = useFetcher<{ errors?: any; cart?: StoreCart }>();

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField, Textarea } from '@lambdacurry/forms/remix-hook-form';
 import { StoreProductReview } from '@lambdacurry/medusa-plugins-sdk';
 import { StoreOrderLineItem } from '@medusajs/types';
-import { Link, useFetcher } from '@remix-run/react';
+import { Link, useFetcher } from 'react-router';
 import { FC } from 'react';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { z } from 'zod';

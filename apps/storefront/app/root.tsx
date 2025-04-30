@@ -7,11 +7,11 @@ import {
   ShouldRevalidateFunction,
   useLoaderData,
   useRouteError,
-} from '@remix-run/react';
+} from 'react-router';
 import { useRef } from 'react';
 import { Page } from './components/layout/Page';
 import { RootProviders } from './providers/root-providers';
-import { MetaFunction } from '@remix-run/node';
+import { MetaFunction } from 'react-router';
 import { getCommonMeta, mergeMeta } from '@libs/util/meta';
 import { getRootLoader } from '@libs/util/server/root.server';
 

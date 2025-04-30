@@ -2,7 +2,7 @@ import { QuantitySelector } from '@app/components/common/remix-hook-form/field-g
 import { updateLineItemSchema } from '@app/routes/api.cart.line-items.update';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StoreCartLineItem } from '@medusajs/types';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from 'react-router';
 import clsx from 'clsx';
 import { FC, HTMLAttributes } from 'react';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';

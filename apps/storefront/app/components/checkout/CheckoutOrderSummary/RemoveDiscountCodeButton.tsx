@@ -1,6 +1,6 @@
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon';
 import { StoreCart, StoreCartPromotion } from '@medusajs/types';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from 'react-router';
 import { FC } from 'react';
 
 export interface RemoveDiscountCodeButtonProps {

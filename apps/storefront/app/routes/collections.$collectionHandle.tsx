@@ -3,8 +3,8 @@ import { ProductListWithPagination } from '@app/components/product/ProductListWi
 import { PageHeading } from '@app/components/sections/PageHeading';
 import { fetchCollections } from '@libs/util/server/data/collections.server';
 import { fetchProducts } from '@libs/util/server/products.server';
-import { LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { NavLink, useLoaderData } from '@remix-run/react';
+import { LoaderFunctionArgs, redirect } from 'react-router';
+import { NavLink, useLoaderData } from 'react-router';
 import clsx from 'clsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

@@ -3,8 +3,8 @@ import { addressPayload } from '@libs/util/addresses';
 import { removeCartId } from '@libs/util/server/cookies.server';
 import { initiatePaymentSession, placeOrder, retrieveCart, updateCart } from '@libs/util/server/data/cart.server';
 import type { StoreCart } from '@medusajs/types';
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { redirect, data as remixData } from '@remix-run/node';
+import type { ActionFunctionArgs } from 'react-router';
+import { redirect, data as remixData } from 'react-router';
 import { getValidatedFormData } from 'remix-hook-form';
 import { z } from 'zod';
 

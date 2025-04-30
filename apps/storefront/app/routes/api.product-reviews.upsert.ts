@@ -3,7 +3,7 @@ import { StoreUpsertProductReviewsDTO } from '@lambdacurry/medusa-plugins-sdk';
 import { baseMedusaConfig } from '@libs/util/server/client.server';
 import { reviewsFileUploadHandler, upsertProductReviews } from '@libs/util/server/data/product-reviews.server';
 import { parseFormData } from '@mjackson/form-data-parser';
-import { data } from '@remix-run/node';
+import { data } from 'react-router';
 import { getValidatedFormData } from 'remix-hook-form';
 import { z } from 'zod';
 

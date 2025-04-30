@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, data } from '@remix-run/node';
+import { ActionFunctionArgs, data } from 'react-router';
 import { z } from 'zod';
 import { getValidatedFormData } from 'remix-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

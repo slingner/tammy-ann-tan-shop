@@ -1,6 +1,6 @@
 import { buildSearchParamsFromObject } from '@libs/util/buildSearchParamsFromObject';
 import type { CustomAction, ProductListFilter } from '@libs/types';
-import { useFetcher, useParams } from '@remix-run/react';
+import { useFetcher, useParams } from 'react-router';
 import clsx from 'clsx';
 import { HTMLAttributes, memo, useEffect, useState, type FC } from 'react';
 import { ProductCategoryTabs } from '@app/components/product/ProductCategoryTabs';

@@ -1,5 +1,5 @@
 import { FC, FormEvent, PropsWithChildren, useEffect, useMemo, useState } from 'react';
-import { SubmitFunction } from '@remix-run/react';
+import { SubmitFunction } from 'react-router';
 import { PaymentMethodCreateParams, StripePaymentElement } from '@stripe/stripe-js';
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import clsx from 'clsx';

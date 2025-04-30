@@ -3,8 +3,8 @@ import { Container } from '@app/components/common/container/Container';
 import { Image } from '@app/components/common/images/Image';
 import { formatPhoneNumber } from '@libs/util/phoneNumber';
 import { formatPrice } from '@libs/util/prices';
-import { LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { LoaderFunctionArgs, redirect } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import { retrieveOrder } from '@libs/util/server/data/orders.server';
 import { StoreOrder, StorePaymentCollection } from '@medusajs/types';
 

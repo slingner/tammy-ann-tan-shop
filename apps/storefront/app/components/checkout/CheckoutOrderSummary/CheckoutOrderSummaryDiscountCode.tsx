@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { AddDiscountCodeInput, CheckoutAction } from '@app/routes/api.checkout';
-import { FetcherWithComponents, useFetcher } from '@remix-run/react';
+import { FetcherWithComponents, useFetcher } from 'react-router';
 import { RemovePromotionCodeButton } from './RemoveDiscountCodeButton';
 import { ButtonLink } from '@app/components/common/buttons/ButtonLink';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';

@@ -1,10 +1,10 @@
 import * as Sentry from '@sentry/remix';
-import { createReadableStreamFromReadable } from '@remix-run/node';
-import { RemixServer } from '@remix-run/react';
+import { createReadableStreamFromReadable } from '@react-router/node';
+import { ServerRouter } from 'react-router';
 import { renderToPipeableStream } from 'react-dom/server';
 import { PassThrough } from 'stream';
 import isbot from 'isbot';
-import type { EntryContext } from '@remix-run/react/dist/entry';
+import type { EntryContext } from '@react-router/react/dist/entry';
 
 if (process.env.SENTRY_DSN)
   Sentry.init({
@@ -18,7 +18,7 @@ export const handleError = Sentry.sentryHandleError;
 const ABORT_DELAY = 5000;
 
 export default function handleRequest(
-  ...props: [request: Request, responseStatusCode: number, responseHeaders: Headers, remixContext: EntryContext]
+  ...props: [request: Request, responseStatusCode: number, responseHeaders: Headers, reactRouterContext: EntryContext]
 ) {
   return isbot(props[0].headers.get('user-agent')) ? handleBotRequest(...props) : handleBrowserRequest(...props);
 }
@@ -27,12 +27,12 @@ function handleBotRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
+  reactRouterContext: EntryContext,
 ) {
   return new Promise((resolve, reject) => {
     let didError = false;
 
-    const { pipe, abort } = renderToPipeableStream(<RemixServer context={remixContext} url={request.url} />, {
+    const { pipe, abort } = renderToPipeableStream(<ServerRouter context={reactRouterContext} url={request.url} />, {
       onAllReady() {
         const body = new PassThrough();
 
@@ -67,12 +67,12 @@ function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
+  reactRouterContext: EntryContext,
 ) {
   return new Promise((resolve, reject) => {
     let didError = false;
 
-    const { pipe, abort } = renderToPipeableStream(<RemixServer context={remixContext} url={request.url} />, {
+    const { pipe, abort } = renderToPipeableStream(<ServerRouter context={reactRouterContext} url={request.url} />, {
       onShellReady() {
         const body = new PassThrough();
 

@@ -1,5 +1,5 @@
 import { SitemapUrl, buildSitemapUrlSetXML } from '@libs/util/xml/sitemap-builder';
-import { LoaderFunctionArgs } from '@remix-run/node';
+import { LoaderFunctionArgs } from 'react-router';
 
 const pages = ['/', '/products'];
 

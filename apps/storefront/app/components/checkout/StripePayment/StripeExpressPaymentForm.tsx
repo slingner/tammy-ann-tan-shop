@@ -4,7 +4,7 @@ import { Address } from '@libs/types';
 import { amountToStripeExpressCheckoutAmount } from '@libs/util/checkout/amountToStripeExpressCheckoutAmount';
 import { expressCheckoutClient } from '@libs/util/checkout/express-checkout-client';
 import { StoreCart, StoreCartShippingOption } from '@medusajs/types';
-import { useNavigate } from '@remix-run/react';
+import { useNavigate } from 'react-router';
 import { ExpressCheckoutElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import {
   type ClickResolveDetails,

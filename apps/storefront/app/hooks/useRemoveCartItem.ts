@@ -1,5 +1,5 @@
 import { StoreCart, StoreCartLineItem } from '@medusajs/types';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from 'react-router';
 
 export const useRemoveCartItem = () => {
   const fetcher = useFetcher<{ cart: StoreCart }>();

@@ -26,7 +26,7 @@ import {
   selectVariantMatrix,
 } from '@libs/util/products';
 import { StoreProduct, StoreProductOptionValue, StoreProductVariant } from '@medusajs/types';
-import { Link, useFetcher } from '@remix-run/react';
+import { Link, useFetcher } from 'react-router';
 import truncate from 'lodash/truncate';
 import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';

@@ -1,4 +1,4 @@
-import { useFetchers } from '@remix-run/react';
+import { useFetchers } from 'react-router';
 import { useRootLoaderData } from './useRootLoaderData';
 import { useStorefront } from './useStorefront';
 import { StoreCart } from '@medusajs/types';

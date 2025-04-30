@@ -7,8 +7,8 @@ import { initiatePaymentSession, retrieveCart, setShippingMethod } from '@libs/u
 import { listCartPaymentProviders } from '@libs/util/server/data/payment.server';
 import { CartDTO, StoreCart, StoreCartShippingOption, StorePaymentProvider } from '@medusajs/types';
 import { BasePaymentSession } from '@medusajs/types/dist/http/payment/common';
-import { LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { LoaderFunctionArgs, redirect } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import { Empty } from '@app/components/common/Empty/Empty';
 import { CheckoutFlow } from '@app/components/checkout/CheckoutFlow';
 import { CheckoutSidebar } from '@app/components/checkout/CheckoutSidebar';

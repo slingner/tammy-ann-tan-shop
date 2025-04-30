@@ -1,6 +1,6 @@
 import { buildObjectFromSearchParams } from '@libs/util/buildObjectFromSearchParams';
 import { getProductListData } from '@libs/util/server/page.server';
-import { LoaderFunctionArgs, data as remixData } from '@remix-run/node';
+import { LoaderFunctionArgs, data as remixData } from 'react-router';
 
 const productList = async ({ request }: Pick<LoaderFunctionArgs, 'request'>) => {
   const result = await getProductListData(request);

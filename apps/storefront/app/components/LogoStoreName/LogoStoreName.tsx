@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from 'react';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import clsx from 'clsx';
 import { useSiteDetails } from '@app/hooks/useSiteDetails';
 import { Image } from '@app/components/common/images/Image';
