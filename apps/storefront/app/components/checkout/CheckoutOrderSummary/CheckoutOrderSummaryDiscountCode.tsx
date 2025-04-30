@@ -10,6 +10,7 @@ import { discountCodeSchema } from '@app/routes/api.checkout.discount-code';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormError } from '@app/components/common/remix-hook-form/forms/FormError';
 import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
+import { StyledTextField } from '@app/components/common/remix-hook-form/forms/fields/StyledTextField';
 
 export interface CheckoutOrderSummaryDiscountCodeProps {
   cart: HttpTypes.StoreCart & { promotions: PromotionDTO[] };
@@ -67,7 +68,12 @@ export const CheckoutOrderSummaryDiscountCode: FC<CheckoutOrderSummaryDiscountCo
             <fetcher.Form ref={formRef} onSubmit={form.handleSubmit}>
               <input type="hidden" name="cartId" value={cart.id} />
               <div className="!my-0 !flex items-start gap-1">
-                <TextField name="code" className="flex-grow" placeholder="Discount code" aria-label="discount code" />
+                <StyledTextField
+                  name="code"
+                  className="flex-grow"
+                  placeholder="Discount code"
+                  aria-label="discount code"
+                />
                 <SubmitButton type="submit" className="flex-shrink-0 flex-grow-0" disabled={isSubmitting}>
                   {isSubmitting ? 'Applying...' : 'Apply'}
                 </SubmitButton>

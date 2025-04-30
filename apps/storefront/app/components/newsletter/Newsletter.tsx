@@ -36,25 +36,24 @@ export const NewsletterSubscription: FC<{ className?: string }> = ({ className }
         <Alert type="success" className="mb-2 mt-4 min-w-[280px]" title={`Thank you for subscribing!`} />
       ) : (
         <RemixFormProvider {...form}>
-          <fetcher.Form>
-            <div className="flex items-end gap-2 border-b border-white">
+          <fetcher.Form onSubmit={form.handleSubmit}>
+            <div className="items-end gap-2 border-b border-white">
               <div className="flex flex-col text-white gap-5">
                 <span className="text-lg font-bold">Newsletter</span>
                 <p className="font-light">Sign up for our newsletter to only receive good things.</p>
               </div>
-              <div>
-                <TextField
+
+              <div className="flex items-end gap-2">
+                <input
+                  {...form.register('email')}
                   name="email"
                   placeholder="Enter your email"
-                  className="min-w-[220px] border-none rounded-none text-black"
+                  className="min-w-[220px] w-full text-white border-none rounded-none mt-2 pl-0 bg-transparent placeholder:text-white"
                 />
-                <SubmitButton className="h-12" disabled={fetcher.state !== 'idle'}>
-                  Subscribe
+                <SubmitButton variant="ghost" className="pr-0 pl-0">
+                  <ArrowRightIcon className="w-5 h-5" />
                 </SubmitButton>
               </div>
-              <SubmitButton variant="ghost" className="pr-0 pl-0">
-                <ArrowRightIcon className="w-5 h-5" />
-              </SubmitButton>
             </div>
           </fetcher.Form>
         </RemixFormProvider>
