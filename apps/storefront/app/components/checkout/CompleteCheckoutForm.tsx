@@ -1,21 +1,21 @@
 import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
 import { useCheckout } from '@app/hooks/useCheckout';
-import { UpdatePaymentInput } from '@app/routes/api.checkout';
-import { completeCheckoutSchema } from '@app/routes/api.checkout.complete';
+import { CompleteCheckoutFormData, completeCheckoutSchema } from '@app/routes/api.checkout.complete';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox, TextField } from '@lambdacurry/forms/remix-hook-form';
 import { type CustomPaymentSession, type MedusaAddress } from '@libs/types';
 import { emptyAddress, medusaAddressToAddress } from '@libs/util';
-import { type Fetcher, SubmitFunction, useFetcher, useFetchers } from 'react-router';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 import { FC, FormEvent, PropsWithChildren, useState } from 'react';
+import { SubmitFunction, useFetcher } from 'react-router';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { CheckoutOrderSummary } from '.';
 import { FormError } from '../common/remix-hook-form/forms/FormError';
 import HiddenAddressGroup from './HiddenAddressGroup';
 import {
-  defaultStripeAddress,
   MedusaStripeAddress,
   type StripeAddress,
+  defaultStripeAddress,
 } from './MedusaStripeAddress/MedusaStripeAddress';
 import { AddressDisplay } from './address/AddressDisplay';
 
@@ -26,7 +26,7 @@ export interface CompleteCheckoutFormProps extends PropsWithChildren {
   submitMessage?: string;
   className?: string;
   onSubmit?: (
-    data: UpdatePaymentInput,
+    data: CompleteCheckoutFormData,
     event: FormEvent<HTMLFormElement>,
     methods: {
       setSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,21 +44,13 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
   providerId,
   className,
 }) => {
-  const { activePaymentSession, cart } = useCheckout();
+  const { activePaymentSession, cart, isCartMutating } = useCheckout();
 
-  const fetchers = useFetchers() as (Fetcher & { formAction: string })[];
-
-  const checkoutFetchers = fetchers.filter(
-    (f) =>
-      f.formAction && (f.formAction.startsWith('/api/checkout') || f.formAction.startsWith('/api/cart/line-items')),
-  );
-  const isCheckoutLoading = checkoutFetchers.some((fetcher) => ['submitting', 'loading'].includes(fetcher.state));
-
-  const submitPaymentFetcher = useFetcher<never>();
+  const completeCartFetcher = useFetcher<never>({ key: FetcherKeys.cart.completeCheckout });
 
   const [submitting, setSubmitting] = useState(false);
 
-  const isSubmitting = ['submitting', 'loading'].includes(submitPaymentFetcher.state) || submitting;
+  const isSubmitting = ['submitting', 'loading'].includes(completeCartFetcher.state) || submitting;
 
   const paymentMethodsForProvider = paymentMethods.filter((paymentMethod) => paymentMethod.provider_id === providerId);
 
@@ -77,7 +69,7 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
       label: country.display_name,
     })) as { value: string; label: string }[]) ?? [];
 
-  const defaultValues: UpdatePaymentInput = {
+  const defaultValues: CompleteCheckoutFormData = {
     cartId: cart.id,
     paymentMethodId: initialPaymentMethodId,
     sameAsShipping: true,
@@ -88,7 +80,7 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
   const form = useRemixForm({
     resolver: zodResolver(completeCheckoutSchema),
     defaultValues,
-    fetcher: submitPaymentFetcher,
+    fetcher: completeCartFetcher,
     submitConfig: {
       method: 'post',
       action: '/api/checkout/complete',
@@ -133,7 +125,7 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
     <SubmitButton
       form={id}
       className="w-full lg:w-auto"
-      disabled={isSubmitting || isCheckoutLoading || (!sameAsShipping && !billingAddress)}
+      disabled={isSubmitting || isCartMutating || (!sameAsShipping && !billingAddress)}
     >
       {isSubmitting ? 'Confirming...' : (submitMessage ?? 'Confirm & Pay')}
     </SubmitButton>
@@ -144,7 +136,7 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
   return (
     <>
       <RemixFormProvider {...form}>
-        <submitPaymentFetcher.Form id={id} onSubmit={handleSubmit} className={className}>
+        <completeCartFetcher.Form id={id} onSubmit={handleSubmit} className={className}>
           <TextField type="hidden" name="cartId" value={cart.id} />
           <TextField type="hidden" name="providerId" value={providerId} />
 
@@ -169,7 +161,7 @@ export const CompleteCheckoutForm: FC<CompleteCheckoutFormProps> = ({
           <div className={`stripe-payment-form ${initialPaymentMethodId !== 'new' ? 'hidden' : ''}`}>{children}</div>
 
           <FormError />
-        </submitPaymentFetcher.Form>
+        </completeCartFetcher.Form>
 
         <div className="block lg:hidden">
           <CheckoutOrderSummary name="checkout" submitButton={<PaymentSubmitButton />} />

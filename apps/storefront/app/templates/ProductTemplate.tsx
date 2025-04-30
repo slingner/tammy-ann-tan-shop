@@ -16,9 +16,11 @@ import { Share } from '@app/components/share';
 import { useCart } from '@app/hooks/useCart';
 import { useProductInventory } from '@app/hooks/useProductInventory';
 import { useRegion } from '@app/hooks/useRegion';
+import { createLineItemSchema } from '@app/routes/api.cart.line-items.create';
 import HomeIcon from '@heroicons/react/24/solid/HomeIcon';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StoreProductReviewStats } from '@lambdacurry/medusa-plugins-sdk';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 import {
   getFilteredOptionValues,
   getOptionValuesWithDiscountLabels,
@@ -30,15 +32,6 @@ import truncate from 'lodash/truncate';
 import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useFetcher } from 'react-router';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
-import { z } from 'zod';
-
-const addToCartSchema = z.object({
-  productId: z.string().min(1, 'Product ID is required'),
-  quantity: z.coerce.number().int().min(1, 'Quantity must be at least 1'),
-  options: z.record(z.string()).default({}),
-});
-
-type AddToCartFormValues = z.infer<typeof addToCartSchema>;
 
 /**
  * Generates breadcrumbs for a product page
@@ -89,16 +82,13 @@ const variantIsSoldOut: (variant: StoreProductVariant | undefined) => boolean = 
 
 export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductTemplateProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const addToCartFetcher = useFetcher<any>();
+  const addToCartFetcher = useFetcher<any>({ key: FetcherKeys.cart.createLineItem });
   const { toggleCartDrawer } = useCart();
   const { region } = useRegion();
   const hasErrors = Object.keys(addToCartFetcher.data?.errors || {}).length > 0;
 
-  // Detect form submission as early as possible
-  const isFormSubmitting = addToCartFetcher.formAction?.includes('/api/cart/line-items/create');
-
   // Combine both states to detect adding items as early as possible
-  const isAddingToCart = isFormSubmitting || ['submitting', 'loading'].includes(addToCartFetcher.state);
+  const isAddingToCart = ['submitting', 'loading'].includes(addToCartFetcher.state);
 
   const defaultValues = {
     productId: product.id!,
@@ -135,7 +125,7 @@ export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductT
   };
 
   const form = useRemixForm({
-    resolver: zodResolver(addToCartSchema),
+    resolver: zodResolver(createLineItemSchema),
     defaultValues,
     fetcher: addToCartFetcher,
     submitConfig: {

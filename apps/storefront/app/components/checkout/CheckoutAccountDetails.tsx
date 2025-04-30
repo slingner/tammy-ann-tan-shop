@@ -23,16 +23,17 @@ import HiddenAddressGroup from './HiddenAddressGroup';
 import { MedusaStripeAddress, type StripeAddress } from './MedusaStripeAddress/MedusaStripeAddress';
 import { AddressDisplay } from './address/AddressDisplay';
 import { selectInitialShippingAddress } from './checkout-form-helpers';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 const NEW_SHIPPING_ADDRESS_ID = 'new';
 
 export const CheckoutAccountDetails = () => {
   const checkoutAccountDetailsFormFetcher = useFetcher<{
     errors: FieldErrors;
-  }>();
+  }>({ key: FetcherKeys.cart.accountDetails });
   const { customer } = useCustomer();
   const { regions } = useRegions();
-  const { step, setStep, goToNextStep, cart } = useCheckout();
+  const { step, setStep, goToNextStep, cart, isCartMutating } = useCheckout();
   const isActiveStep = step === CheckoutStep.ACCOUNT_DETAILS;
 
   if (!cart) return null;
@@ -153,7 +154,9 @@ export const CheckoutAccountDetails = () => {
               <FormError />
 
               <Actions>
-                <SubmitButton disabled={isSubmitting}>{isSubmitting ? 'Saving...' : 'Save and continue'}</SubmitButton>
+                <SubmitButton disabled={isSubmitting || isCartMutating}>
+                  {isSubmitting ? 'Saving...' : 'Save and continue'}
+                </SubmitButton>
 
                 {isComplete && (
                   <Button disabled={isSubmitting} onClick={handleCancel}>

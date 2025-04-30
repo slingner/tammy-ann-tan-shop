@@ -1,16 +1,15 @@
-import { type ActionFunctionArgs, data } from 'react-router';
-import { getValidatedFormData } from 'remix-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { getVariantBySelectedOptions } from '@libs/util/products';
 import { setCartId } from '@libs/util/server/cookies.server';
 import { addToCart } from '@libs/util/server/data/cart.server';
 import { getProductsById } from '@libs/util/server/data/products.server';
 import { getSelectedRegion } from '@libs/util/server/data/regions.server';
-import { StoreCart } from '@medusajs/types';
 import { FieldErrors } from 'react-hook-form';
+import { type ActionFunctionArgs, data } from 'react-router';
+import { getValidatedFormData } from 'remix-hook-form';
+import { z } from 'zod';
 
-const createLineItemSchema = z.object({
+export const createLineItemSchema = z.object({
   productId: z.string().min(1, 'Product ID is required'),
   options: z.record(z.string()).default({}),
   quantity: z.coerce.number().int().min(1, 'Quantity must be at least 1'),

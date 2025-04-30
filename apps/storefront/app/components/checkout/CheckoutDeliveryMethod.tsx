@@ -1,25 +1,26 @@
+import { Alert } from '@app/components/common/alert/Alert';
 import { useCheckout } from '@app/hooks/useCheckout';
 import { CheckoutStep } from '@app/providers/checkout-provider';
-import { Alert } from '@app/components/common/alert/Alert';
-import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import {
+  ChooseCheckoutShippingMethodsFormData,
+  shippingMethodsSchema,
+} from '@app/routes/api.checkout.shipping-methods';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { TextField } from '@lambdacurry/forms/remix-hook-form';
 import {
   checkAccountDetailsComplete,
   checkDeliveryMethodComplete,
   getShippingOptionsByProfile,
 } from '@libs/util/checkout';
 import { formatPrice } from '@libs/util/prices';
-import { Fetcher, useFetcher, useFetchers } from 'react-router';
-import { FC, Fragment, useEffect, useMemo, useRef } from 'react';
-import { AddShippingMethodInput } from '@app/routes/api.checkout';
-import { CheckoutSectionHeader } from './CheckoutSectionHeader';
-import { ShippingOptionsRadioGroup } from './checkout-fields/ShippingOptionsRadioGroup/ShippingOptionsRadioGroup';
-import { StripeSecurityImage } from '../images/StripeSecurityImage';
 import { StoreCart, StoreCartShippingOption } from '@medusajs/types';
 import { BaseCartShippingMethod } from '@medusajs/types/dist/http/cart/common';
-import { TextField } from '@lambdacurry/forms/remix-hook-form';
-import { shippingMethodsSchema } from '@app/routes/api.checkout.shipping-methods';
+import { FC, Fragment, useEffect, useMemo } from 'react';
+import { useFetcher } from 'react-router';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { StripeSecurityImage } from '../images/StripeSecurityImage';
+import { CheckoutSectionHeader } from './CheckoutSectionHeader';
+import { ShippingOptionsRadioGroup } from './checkout-fields/ShippingOptionsRadioGroup/ShippingOptionsRadioGroup';
 
 const getShippingOptionsDefaultValues = (
   cart: StoreCart,
@@ -35,14 +36,14 @@ const getShippingOptionsDefaultValues = (
 };
 
 const getDefaultValues = (cart: StoreCart, shippingOptionsByProfile: { [key: string]: StoreCartShippingOption[] }) =>
-  (({
+  ({
     cartId: cart.id,
-    shippingOptionIds: getShippingOptionsDefaultValues(cart, shippingOptionsByProfile)
-  }) as AddShippingMethodInput);
+    shippingOptionIds: getShippingOptionsDefaultValues(cart, shippingOptionsByProfile),
+  }) as ChooseCheckoutShippingMethodsFormData;
 
 export const CheckoutDeliveryMethod: FC = () => {
   const fetcher = useFetcher<{ errors?: any; cart?: StoreCart }>();
-  const { step, shippingOptions, setStep, goToNextStep, cart } = useCheckout();
+  const { step, shippingOptions, setStep, goToNextStep, cart, isCartMutating } = useCheckout();
   const isActiveStep = step === CheckoutStep.PAYMENT;
   const isSubmitting = ['submitting', 'loading'].includes(fetcher.state);
   if (!cart) return null;
@@ -51,11 +52,8 @@ export const CheckoutDeliveryMethod: FC = () => {
   const hasCompletedAccountDetails = checkAccountDetailsComplete(cart);
   const shippingOptionsByProfile = useMemo(() => getShippingOptionsByProfile(shippingOptions), [shippingOptions]);
   const isComplete = useMemo(() => checkDeliveryMethodComplete(cart, shippingOptions), [cart, shippingOptions]);
-  const fetchers = useFetchers() as (Fetcher & { formAction: string })[];
-  const lineItemFetchers = fetchers.filter((f) => f.formAction && f.formAction.startsWith('/api/cart/line-items'));
-  const lineItemFetchersLoading = lineItemFetchers.some((fetcher) => ['loading'].includes(fetcher.state));
 
-  const defaultValues: AddShippingMethodInput = useMemo(
+  const defaultValues: ChooseCheckoutShippingMethodsFormData = useMemo(
     () => getDefaultValues(cart, shippingOptionsByProfile),
     [cart, shippingOptionsByProfile],
   );
@@ -133,6 +131,7 @@ export const CheckoutDeliveryMethod: FC = () => {
                       </Alert>
                     )}
                     <ShippingOptionsRadioGroup
+                      disabled={isCartMutating}
                       name={`shippingOptionIds.${shippingOptionProfileIndex}`}
                       shippingOptions={shippingOptions}
                       region={cart.region!}

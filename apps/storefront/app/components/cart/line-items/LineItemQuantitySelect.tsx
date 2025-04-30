@@ -6,6 +6,7 @@ import { useFetcher } from 'react-router';
 import clsx from 'clsx';
 import { FC, HTMLAttributes } from 'react';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 export interface LineItemQuantitySelectProps extends HTMLAttributes<HTMLFormElement> {
   formId: string;
@@ -20,7 +21,8 @@ export const LineItemQuantitySelect: FC<LineItemQuantitySelectProps> = ({
   maxInventory = 10,
   ...props
 }) => {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher({ key: FetcherKeys.cart.updateLineItem });
+
   const isLoading = ['submitting', 'loading'].includes(fetcher.state);
 
   const form = useRemixForm({
@@ -28,6 +30,11 @@ export const LineItemQuantitySelect: FC<LineItemQuantitySelectProps> = ({
     defaultValues: {
       lineItemId: item.id,
       quantity: item.quantity.toString(),
+    },
+    fetcher,
+    submitConfig: {
+      method: 'post',
+      action: '/api/cart/line-items/update',
     },
   });
 
@@ -43,7 +50,12 @@ export const LineItemQuantitySelect: FC<LineItemQuantitySelectProps> = ({
 
   return (
     <RemixFormProvider {...form}>
-      <fetcher.Form id={formId} className={clsx('line-item-quantity-select', className)} {...props}>
+      <fetcher.Form
+        id={formId}
+        className={clsx('line-item-quantity-select', className)}
+        {...props}
+        onSubmit={form.handleSubmit}
+      >
         <QuantitySelector
           formId={formId}
           className={clsx({

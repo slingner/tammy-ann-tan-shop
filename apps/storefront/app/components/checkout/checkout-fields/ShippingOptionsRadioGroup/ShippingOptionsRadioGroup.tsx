@@ -12,6 +12,7 @@ export interface ShippingOptionsRadioGroupProps {
   region: StoreRegion;
   value?: string | null;
   onValueChange?: (value: string) => void;
+  disabled?: boolean;
 }
 
 export const ShippingOptionsRadioGroup: FC<ShippingOptionsRadioGroupProps> = ({
@@ -20,6 +21,7 @@ export const ShippingOptionsRadioGroup: FC<ShippingOptionsRadioGroupProps> = ({
   region,
   value,
   onValueChange,
+  disabled,
 }) => {
   const form = useRemixFormContext();
   const isSubmitting = form.formState.isSubmitting;
@@ -45,7 +47,7 @@ export const ShippingOptionsRadioGroup: FC<ShippingOptionsRadioGroupProps> = ({
       value={value ?? ''}
       onValueChange={handleChange}
       className={clsx('xs:grid-cols-2 my-6 grid grid-cols-1 gap-4', isSubmitting && 'pointer-events-none')}
-      disabled={isSubmitting}
+      disabled={isSubmitting || disabled}
     >
       {shippingOptions.map((shippingOption) => (
         <ShippingOptionsRadioGroupOption key={shippingOption.id} shippingOption={shippingOption} region={region} />

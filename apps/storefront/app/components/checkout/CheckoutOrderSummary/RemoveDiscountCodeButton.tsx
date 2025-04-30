@@ -9,7 +9,7 @@ export interface RemoveDiscountCodeButtonProps {
 }
 
 export const RemovePromotionCodeButton: FC<RemoveDiscountCodeButtonProps> = ({ cart, promotion }) => {
-  const fetcher = useFetcher<{}>();
+  const fetcher = useFetcher<{}>({ key: 'cart:remove-promotion-code' });
 
   if (['submitting', 'loading'].includes(fetcher.state)) return null;
 
