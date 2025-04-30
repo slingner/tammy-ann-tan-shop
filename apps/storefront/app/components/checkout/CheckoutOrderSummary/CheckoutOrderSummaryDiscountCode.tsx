@@ -1,16 +1,14 @@
-import { FC, useEffect, useRef, useState } from 'react';
-import { AddDiscountCodeInput, CheckoutAction } from '@app/routes/api.checkout';
-import { FetcherWithComponents, useFetcher } from 'react-router';
-import { RemovePromotionCodeButton } from './RemoveDiscountCodeButton';
 import { ButtonLink } from '@app/components/common/buttons/ButtonLink';
-import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
-import { TextField } from '@lambdacurry/forms/remix-hook-form';
-import { HttpTypes, PromotionDTO } from '@medusajs/types';
+import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
+import { FormError } from '@app/components/common/remix-hook-form/forms/FormError';
+import { StyledTextField } from '@app/components/common/remix-hook-form/forms/fields/StyledTextField';
 import { discountCodeSchema } from '@app/routes/api.checkout.discount-code';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormError } from '@app/components/common/remix-hook-form/forms/FormError';
-import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
-import { StyledTextField } from '@app/components/common/remix-hook-form/forms/fields/StyledTextField';
+import { HttpTypes, PromotionDTO } from '@medusajs/types';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useFetcher } from 'react-router';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { RemovePromotionCodeButton } from './RemoveDiscountCodeButton';
 
 export interface CheckoutOrderSummaryDiscountCodeProps {
   cart: HttpTypes.StoreCart & { promotions: PromotionDTO[] };
@@ -33,6 +31,7 @@ export const CheckoutOrderSummaryDiscountCode: FC<CheckoutOrderSummaryDiscountCo
       cartId: cart.id,
       code: '',
     },
+
     fetcher,
     submitConfig: {
       method: 'post',

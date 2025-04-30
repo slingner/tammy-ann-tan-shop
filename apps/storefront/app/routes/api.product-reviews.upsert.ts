@@ -103,7 +103,7 @@ export async function action({ request }: { request: Request }) {
       ] as StoreUpsertProductReviewsDTO['reviews'],
     });
 
-    return data({ product_reviews });
+    return data({ product_reviews, success: true });
   } catch (error: any) {
     console.error('product reviews error', error);
     return data(

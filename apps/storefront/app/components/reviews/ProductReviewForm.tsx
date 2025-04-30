@@ -7,7 +7,7 @@ import { TextField, Textarea } from '@lambdacurry/forms/remix-hook-form';
 import { StoreProductReview } from '@lambdacurry/medusa-plugins-sdk';
 import { StoreOrderLineItem } from '@medusajs/types';
 import { Link, useFetcher } from 'react-router';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { z } from 'zod';
 import { SubmitButton } from '../common/remix-hook-form/buttons/SubmitButton';
@@ -54,6 +54,14 @@ export const ProductReviewForm: FC<ProductReviewFormProps> = ({
 
   const fetcher = useFetcher();
 
+  useEffect(() => {
+    if (fetcher.data?.success) {
+      setEditing(false);
+    }
+  }, [fetcher.data?.success]);
+
+  const formRef = useRef<HTMLFormElement>(null);
+
   const defaultValues = productReview
     ? { rating: productReview.rating, content: productReview.content, images: productReview.images }
     : { rating: 5, content: '' };
@@ -63,6 +71,15 @@ export const ProductReviewForm: FC<ProductReviewFormProps> = ({
   const form = useRemixForm({
     resolver: zodResolver(schema),
     fetcher,
+    submitHandlers: {
+      onValid: (data) => {
+        fetcher.submit(formRef.current, {
+          method: 'post',
+          action: '/api/product-reviews/upsert',
+          encType: 'multipart/form-data',
+        });
+      },
+    },
     submitConfig: {
       method: 'post',
       encType: 'multipart/form-data',
@@ -81,7 +98,7 @@ export const ProductReviewForm: FC<ProductReviewFormProps> = ({
 
   return (
     <RemixFormProvider {...form}>
-      <fetcher.Form onSubmit={form.handleSubmit}>
+      <fetcher.Form ref={formRef} onSubmit={form.handleSubmit}>
         <FormError className="mt-0" />
 
         <div className="flex flex-wrap justify-between gap-4">
