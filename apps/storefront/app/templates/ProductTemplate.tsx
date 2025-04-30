@@ -1,10 +1,10 @@
 import { Breadcrumb, Breadcrumbs } from '@app/components/common/breadcrumbs/Breadcrumbs';
 import { Button } from '@app/components/common/buttons/Button';
-import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
 import { Container } from '@app/components/common/container/Container';
 import { FieldLabel } from '@app/components/common/forms/fields/FieldLabel';
 import { Grid } from '@app/components/common/grid/Grid';
 import { GridColumn } from '@app/components/common/grid/GridColumn';
+import { SubmitButton } from '@app/components/common/remix-hook-form/buttons/SubmitButton';
 import { QuantitySelector } from '@app/components/common/remix-hook-form/field-groups/QuantitySelector';
 import { ProductImageGallery } from '@app/components/product/ProductImageGallery';
 import { ProductOptionSelectorRadio } from '@app/components/product/ProductOptionSelectorRadio';
@@ -26,16 +26,15 @@ import {
   selectVariantMatrix,
 } from '@libs/util/products';
 import { StoreProduct, StoreProductOptionValue, StoreProductVariant } from '@medusajs/types';
-import { Link, useFetcher } from 'react-router';
 import truncate from 'lodash/truncate';
 import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useFetcher } from 'react-router';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { z } from 'zod';
-import { ReadFormState, FormState } from 'react-hook-form';
 
 const addToCartSchema = z.object({
   productId: z.string().min(1, 'Product ID is required'),
-  quantity: z.string().transform((val) => parseInt(val, 10)),
+  quantity: z.coerce.number().int().min(1, 'Quantity must be at least 1'),
   options: z.record(z.string()).default({}),
 });
 
