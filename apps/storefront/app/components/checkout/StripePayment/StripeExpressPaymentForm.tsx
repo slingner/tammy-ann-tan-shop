@@ -71,7 +71,6 @@ export const StripeExpressCheckoutForm: FC = () => {
   };
 
   const onReady = ({ availablePaymentMethods, ...rest }: StripeExpressCheckoutElementReadyEvent) => {
-    console.log('onReady called!', availablePaymentMethods);
     if (!availablePaymentMethods) {
       setCanMakePaymentStatus('unavailable');
       return;
@@ -95,8 +94,6 @@ export const StripeExpressCheckoutForm: FC = () => {
 
   const onConfirm = async (ev: StripeExpressCheckoutElementConfirmEvent) => {
     try {
-      console.log('onConfirm called!', ev);
-
       if (!stripe || !elements) {
         ev.paymentFailed({ reason: 'fail' });
         return;
@@ -257,7 +254,6 @@ export const StripeExpressCheckoutForm: FC = () => {
   };
 
   const onShippingAddressChange = async (ev: StripeExpressCheckoutElementShippingAddressChangeEvent) => {
-    console.log('onShippingAddressChange called!', ev);
     // missing fields will be update on onConfirm event/handler
     const medusaAddress: Address = {
       firstName: '',
