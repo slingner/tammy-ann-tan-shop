@@ -3,7 +3,6 @@ import { type AddressMode, loadStripe, StripeAddressElementChangeEvent } from '@
 import { useMemo, type Dispatch, type FC, type SetStateAction } from 'react';
 import { useEnv } from '@app/hooks/useEnv';
 import { useRegion } from '@app/hooks/useRegion';
-import { useSiteDetails } from '@app/hooks/useSiteDetails';
 import { BaseCartAddress } from '@medusajs/types/dist/http/cart/common';
 import { useCheckout } from '@app/hooks/useCheckout';
 import { Address } from '@libs/types';
@@ -33,7 +32,7 @@ interface MedusaStripeAddressProps {
   address: Address;
   mode: AddressMode;
   allowedCountries?: string[];
-  setAddress: Dispatch<SetStateAction<StripeAddress>>;
+  setAddress: (address: StripeAddress) => void;
 }
 
 export const MedusaStripeAddress: FC<MedusaStripeAddressProps> = ({

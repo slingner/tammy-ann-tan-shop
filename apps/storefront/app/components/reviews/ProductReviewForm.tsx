@@ -1,17 +1,29 @@
 import { ImageUploadWithPreview, ProductReviewImage } from '@app/components/common/ImageUpload/ImageUploadWithPreview';
 import { Actions } from '@app/components/common/actions';
-import { Button, OldSubmitButton } from '@app/components/common/buttons';
-import { Form } from '@app/components/common/forms/Form';
-import { FormError } from '@app/components/common/forms/FormError';
+import { Button } from '@app/components/common/buttons';
 import { FieldLabel } from '@app/components/common/forms/fields/FieldLabel';
-import { FieldTextarea } from '@app/components/common/forms/fields/FieldTextarea';
-import { ProductReviewAction } from '@app/routes/api.product-reviews';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { TextField, Textarea } from '@lambdacurry/forms/remix-hook-form';
 import { StoreProductReview } from '@lambdacurry/medusa-plugins-sdk';
 import { StoreOrderLineItem } from '@medusajs/types';
-import { FetcherWithComponents, Link, useFetcher } from '@remix-run/react';
-import { FC, useState } from 'react';
+import { Link, useFetcher } from '@remix-run/react';
+import { FC } from 'react';
+import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
+import { z } from 'zod';
+import { SubmitButton } from '../common/remix-hook-form/buttons/SubmitButton';
+import { FormError } from '../common/remix-hook-form/forms/FormError';
 import { StarRating } from './StarRating';
-import { upsertProductReviewsValidator } from './product-form-validators';
+
+const schema = z.object({
+  id: z.string().optional(),
+  order_id: z.string().min(1, 'Order is required'),
+  order_line_item_id: z.string().min(1, 'Line item is required'),
+  rating: z.number().min(1, 'Rating is required'),
+  content: z.string().optional().default(''),
+  existing_images: z.string().optional(),
+  review_request_id: z.string().optional(),
+});
+
 export interface ProductReviewFormValues {
   id?: string;
   rating?: number;
@@ -40,59 +52,68 @@ export const ProductReviewForm: FC<ProductReviewFormProps> = ({
 }) => {
   const isComplete = productReview?.id;
 
-  const fetcher = useFetcher<{}>() as FetcherWithComponents<{}>;
+  const fetcher = useFetcher();
 
   const defaultValues = productReview
     ? { rating: productReview.rating, content: productReview.content, images: productReview.images }
-    : { rating: 5, comment: '' };
-
-  const formId = `product-review-form-${lineItem.id}`;
-
-  const [ratingValue, setRatingValue] = useState<number>(defaultValues.rating);
+    : { rating: 5, content: '' };
 
   const existingImages = productReview?.images || [];
 
+  const form = useRemixForm({
+    resolver: zodResolver(schema),
+    fetcher,
+    submitConfig: {
+      method: 'post',
+      encType: 'multipart/form-data',
+      action: '/api/product-reviews/upsert',
+    },
+    defaultValues: {
+      ...defaultValues,
+      order_id: orderId,
+      order_line_item_id: lineItem.id,
+      id: productReview?.id,
+      review_request_id: requestId,
+    },
+  });
+
+  const ratingValue = form.watch('rating');
+
   return (
-    <Form<ProductReviewFormValues, ProductReviewAction.UPSERT_PRODUCT_REVIEWS>
-      id={formId}
-      encType="multipart/form-data"
-      method="post"
-      action="/api/product-reviews"
-      subaction={ProductReviewAction.UPSERT_PRODUCT_REVIEWS}
-      fetcher={fetcher}
-      validator={upsertProductReviewsValidator}
-      onSubmit={() => setEditing(false)}
-      defaultValues={defaultValues}
-    >
-      <FormError className="mt-0" />
-      <div className="flex flex-wrap justify-between gap-4">
-        <div>
-          <h3 className="text-base text-gray-900">
-            <Link to={`/products/${lineItem.variant?.product?.handle}`}>{lineItem.title}</Link>
-          </h3>
+    <RemixFormProvider {...form}>
+      <fetcher.Form onSubmit={form.handleSubmit}>
+        <FormError className="mt-0" />
 
-          <p className="text-sm font-normal text-gray-500">{lineItem.variant?.title}</p>
+        <div className="flex flex-wrap justify-between gap-4">
+          <div>
+            <h3 className="text-base text-gray-900">
+              <Link to={`/products/${lineItem.variant?.product?.handle}`}>{lineItem.title}</Link>
+            </h3>
+
+            <p className="text-sm font-normal text-gray-500">{lineItem.variant?.title}</p>
+          </div>
+
+          <div>
+            <FieldLabel htmlFor="rating">Select a rating</FieldLabel>
+            <StarRating onChange={(value: number) => form.setValue('rating', value)} value={ratingValue} />
+          </div>
         </div>
 
-        <div>
-          <FieldLabel htmlFor="rating">Select a rating</FieldLabel>
-          <StarRating onChange={setRatingValue} value={ratingValue} />
-        </div>
-      </div>
+        <TextField type="hidden" name="rating" value={ratingValue} />
+        <TextField type="hidden" name="order_id" value={orderId} />
+        <TextField type="hidden" name="order_line_item_id" value={lineItem.id} />
+        {requestId && <TextField type="hidden" name="review_request_id" value={requestId} />}
+        {isComplete && <TextField type="hidden" name="id" value={productReview.id} />}
 
-      {isComplete && <input type="hidden" name="id" value={productReview.id} />}
-      <input type="hidden" name="rating" value={ratingValue} />
-      <input type="hidden" name="order_id" value={orderId} />
-      <input type="hidden" name="order_line_item_id" value={lineItem.id} />
-      {requestId && <input type="hidden" name="review_request_id" value={requestId} />}
+        <ImageUploadWithPreview existingImages={existingImages} className="mb-2 mt-6" />
 
-      <ImageUploadWithPreview existingImages={existingImages} className="mb-2 mt-6" />
+        <Textarea name="content" placeholder="Add your review" className="sm:col-span-12" />
 
-      <FieldTextarea name="content" placeholder="Add your review" className="sm:col-span-12" />
-      <Actions>
-        {isComplete && <Button onClick={() => setEditing(false)}>Cancel</Button>}
-        <OldSubmitButton>{isComplete ? 'Save' : 'Submit Review'}</OldSubmitButton>
-      </Actions>
-    </Form>
+        <Actions>
+          {isComplete && <Button onClick={() => setEditing(false)}>Cancel</Button>}
+          <SubmitButton>{isComplete ? 'Save' : 'Submit Review'}</SubmitButton>
+        </Actions>
+      </fetcher.Form>
+    </RemixFormProvider>
   );
 };

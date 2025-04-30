@@ -23,7 +23,12 @@ export const StripeElementsProvider: FC<StripeElementsProviderProps> = ({ option
 
   const clientSecret = stripeSession?.data?.client_secret as string;
 
-  if (!stripeSession || !stripePromise || !clientSecret) return null;
+  if (!stripeSession || !stripePromise || !clientSecret) {
+    console.log('stripeSession', stripeSession);
+    console.log('stripePromise', stripePromise);
+    console.log('clientSecret', clientSecret);
+    return null;
+  }
 
   return (
     <Elements

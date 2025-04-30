@@ -1,17 +1,16 @@
-import { convertToFormData } from '@libs/util/forms/objectToFormData';
-import { useFetcher } from '@remix-run/react';
+import { LogoStoreName } from '@app/components/LogoStoreName/LogoStoreName';
 import { Container } from '@app/components/common/container/Container';
 import { Select } from '@app/components/common/forms/inputs/Select';
 import { URLAwareNavLink } from '@app/components/common/link/URLAwareNavLink';
+import { NewsletterSubscription } from '@app/components/newsletter/Newsletter';
 import { useRegion } from '@app/hooks/useRegion';
 import { useRegions } from '@app/hooks/useRegions';
 import { useRootLoaderData } from '@app/hooks/useRootLoaderData';
 import { useSiteDetails } from '@app/hooks/useSiteDetails';
+import { convertToFormData } from '@libs/util/forms/objectToFormData';
+import { useFetcher } from '@remix-run/react';
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { LogoStoreName } from '@app/components/LogoStoreName/LogoStoreName';
-import { NewsletterSubscription } from '@app/components/newsletter/Newsletter';
-import { RegionActions } from '@app/routes/api.region';
 import { StripeSecurityImage } from '../../images/StripeSecurityImage';
 import { SocialIcons } from './SocialIcons';
 
@@ -34,7 +33,6 @@ export const Footer = () => {
     fetcher.submit(
       convertToFormData({
         regionId,
-        subaction: RegionActions.CHANGE_REGION,
       }),
       { method: 'post', action: '/api/region' },
     );

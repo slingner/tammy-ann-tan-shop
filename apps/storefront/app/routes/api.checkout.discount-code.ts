@@ -22,16 +22,22 @@ export async function action(actionArgs: ActionFunctionArgs) {
     return remixData({ errors }, { status: 400 });
   }
 
-  const { cart } = await sdk.store.cart.update(data.cartId, {
-    promo_codes: [data.code],
-  });
+  try {
+    const { cart } = await sdk.store.cart.update(data.cartId, {
+      promo_codes: [data.code],
+    });
 
-  if (!cart) {
-    return remixData(
-      { errors: { root: { message: 'Cart could not be updated. Please try again.' } } },
-      { status: 400 },
-    );
+    if (cart.promotions.length)
+      if (!cart) {
+        return remixData(
+          { errors: { root: { message: 'Cart could not be updated. Please try again.' } } },
+          { status: 400 },
+        );
+      }
+
+    return remixData({ cart });
+  } catch (error) {
+    console.error(error);
+    return remixData({ errors: { root: { message: 'Discount code is invalid.' } } }, { status: 400 });
   }
-
-  return remixData({ cart });
 }

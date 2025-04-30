@@ -1,6 +1,5 @@
-import { CheckoutAction } from '@app/routes/api.checkout';
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon';
-import { PromotionDTO, StoreCart, StoreCartPromotion } from '@medusajs/types';
+import { StoreCart, StoreCartPromotion } from '@medusajs/types';
 import { useFetcher } from '@remix-run/react';
 import { FC } from 'react';
 
@@ -15,8 +14,7 @@ export const RemovePromotionCodeButton: FC<RemoveDiscountCodeButtonProps> = ({ c
   if (['submitting', 'loading'].includes(fetcher.state)) return null;
 
   return (
-    <fetcher.Form method="post" action="/api/checkout">
-      <input type="hidden" name="subaction" value={CheckoutAction.REMOVE_DISCOUNT_CODE} />
+    <fetcher.Form method="post" action="/api/checkout/remove-discount-code">
       <input type="hidden" name="cartId" value={cart.id} />
       <input type="hidden" name="code" value={promotion.code} />
 

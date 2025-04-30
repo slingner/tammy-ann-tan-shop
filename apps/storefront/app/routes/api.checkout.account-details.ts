@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateGuestAccountDetails } from '@libs/util/server/checkout.server';
+import { addressToMedusaAddress } from '@libs/util';
+import { updateCart } from '@libs/util/server/data/cart.server';
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { data as remixData } from '@remix-run/node';
 import { getValidatedFormData } from 'remix-hook-form';
@@ -12,15 +13,14 @@ export const accountDetailsSchema = z.object({
   shippingAddress: z.object({
     firstName: z.string().min(1, 'First name is required'),
     lastName: z.string().min(1, 'Last name is required'),
-    company: z.string().optional().nullable(),
+    company: z.string().optional(),
     address1: z.string().min(1, 'Address is required'),
-    address2: z.string().optional().nullable(),
+    address2: z.string().optional(),
     city: z.string().min(1, 'City is required'),
     province: z.string().min(1, 'Province is required'),
     countryCode: z.string().min(1, 'Country is required'),
     postalCode: z.string().min(1, 'Postal code is required'),
-    phone: z.string().optional().nullable(),
-    country: z.string().optional().nullable(),
+    phone: z.string().optional(),
   }),
   shippingAddressId: z.string(),
   isExpressCheckout: z.boolean().optional(),
@@ -38,6 +38,13 @@ export async function action(actionArgs: ActionFunctionArgs) {
     return remixData({ errors }, { status: 400 });
   }
 
-  const { cart, headers } = await updateGuestAccountDetails(data, actionArgs);
-  return remixData({ cart }, { headers });
+  const formattedShippingAddress = addressToMedusaAddress(data.shippingAddress);
+
+  const { cart } = await updateCart(actionArgs.request, {
+    email: data.email,
+    shipping_address: formattedShippingAddress,
+    billing_address: formattedShippingAddress,
+  });
+
+  return remixData({ cart });
 }

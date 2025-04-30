@@ -1,16 +1,13 @@
 import { Alert } from '@app/components/common/alert';
-import { StyledTextField } from '@app/components/common/remix-hook-form/forms/fields/StyledTextField';
 import { newsletterSubscriberSchema } from '@app/routes/api.newsletter-subscriptions';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { TextField } from '@lambdacurry/forms/remix-hook-form';
 import { useFetcher } from '@remix-run/react';
 import clsx from 'clsx';
 import { type FC, useEffect } from 'react';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { SubmitButton } from '../common/remix-hook-form/buttons/SubmitButton';
-import { TextField } from '@lambdacurry/forms/remix-hook-form';
-import { Label } from '@lambdacurry/forms/ui';
-import { FieldText } from '../common/forms/fields/FieldText';
 
 export const NewsletterSubscription: FC<{ className?: string }> = ({ className }) => {
   const fetcher = useFetcher<{
