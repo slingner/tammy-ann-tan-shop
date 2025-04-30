@@ -55,17 +55,6 @@ const uploadImages = async (_images: File | File[] | null | undefined): Promise<
   return data.files.map((i) => i.url);
 };
 
-// async function readFileAsBuffer(filePath: string): Promise<Buffer> {
-//   return new Promise((resolve, reject) => {
-//     const chunks: Buffer[] = [];
-//     const stream = createReadStream(filePath);
-
-//     stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-//     stream.on('error', (err) => reject(err));
-//     stream.on('end', () => resolve(Buffer.concat(chunks)));
-//   });
-// }
-
 export async function action({ request }: { request: Request }) {
   const formData = await parseFormData(request, reviewsFileUploadHandler);
 
