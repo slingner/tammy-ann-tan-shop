@@ -1,5 +1,5 @@
-import { FC, JSXElementConstructor, SVGAttributes } from 'react';
 import clsx from 'clsx';
+import { FC, JSXElementConstructor, SVGAttributes } from 'react';
 import { ButtonBase, ButtonBaseProps } from './ButtonBase';
 
 export interface IconButtonProps extends ButtonBaseProps {

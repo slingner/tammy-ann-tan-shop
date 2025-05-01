@@ -1,8 +1,8 @@
-import { type FC, memo } from 'react';
-import { Image } from '@app/components/common/images/Image';
 import { ScrollArrowButtons } from '@app/components/common/buttons/ScrollArrowButtons';
+import { Image } from '@app/components/common/images/Image';
 import { useScrollArrows } from '@app/hooks/useScrollArrows';
 import { MagnifyingGlassPlusIcon } from '@heroicons/react/24/outline';
+import { type FC, memo } from 'react';
 
 export interface GalleryImage {
   url: string;

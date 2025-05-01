@@ -1,12 +1,12 @@
 import { QuantitySelector } from '@app/components/common/remix-hook-form/field-groups/QuantitySelector';
 import { updateLineItemSchema } from '@app/routes/api.cart.line-items.update';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 import { StoreCartLineItem } from '@medusajs/types';
-import { useFetcher } from 'react-router';
 import clsx from 'clsx';
 import { FC, HTMLAttributes } from 'react';
+import { useFetcher } from 'react-router';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
-import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 export interface LineItemQuantitySelectProps extends HTMLAttributes<HTMLFormElement> {
   formId: string;

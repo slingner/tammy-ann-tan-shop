@@ -1,12 +1,12 @@
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import { FC, useState } from 'react';
 import { Link } from 'react-router';
-import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 
-import { GalleryImage, ReviewImageThumbnailRow } from './ReviewImageThumbnailRow';
-import { StarRating } from './StarRating';
+import { IconButton } from '@app/components/common/buttons';
 import { LightboxGallery } from '@app/components/common/images/LightboxGallery';
 import { StoreOrderLineItem } from '@medusajs/types';
-import { IconButton } from '@app/components/common/buttons';
+import { GalleryImage, ReviewImageThumbnailRow } from './ReviewImageThumbnailRow';
+import { StarRating } from './StarRating';
 
 export interface ProductReviewViewProps {
   lineItem: StoreOrderLineItem;

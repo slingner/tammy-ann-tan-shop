@@ -1,3 +1,6 @@
+import { getCommonMeta, mergeMeta } from '@libs/util/meta';
+import { getRootLoader } from '@libs/util/server/root.server';
+import { useRef } from 'react';
 import {
   Links,
   Meta,
@@ -8,12 +11,9 @@ import {
   useLoaderData,
   useRouteError,
 } from 'react-router';
-import { useRef } from 'react';
+import { MetaFunction } from 'react-router';
 import { Page } from './components/layout/Page';
 import { RootProviders } from './providers/root-providers';
-import { MetaFunction } from 'react-router';
-import { getCommonMeta, mergeMeta } from '@libs/util/meta';
-import { getRootLoader } from '@libs/util/server/root.server';
 
 import '@app/styles/global.css';
 import { useRootLoaderData } from './hooks/useRootLoaderData';

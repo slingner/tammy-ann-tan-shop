@@ -1,7 +1,7 @@
-import { FC } from 'react';
-import { StarRating } from './StarRating';
-import { Link } from 'react-router';
 import { StoreProductReviewStats } from '@lambdacurry/medusa-plugins-sdk';
+import { FC } from 'react';
+import { Link } from 'react-router';
+import { StarRating } from './StarRating';
 
 interface ProductReviewStarsProps {
   reviewsCount?: number;

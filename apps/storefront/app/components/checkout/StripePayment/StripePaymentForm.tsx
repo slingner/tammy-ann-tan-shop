@@ -1,14 +1,14 @@
-import { FC, FormEvent, PropsWithChildren, useEffect, useMemo, useState } from 'react';
-import { SubmitFunction } from 'react-router';
-import { PaymentMethodCreateParams, StripePaymentElement } from '@stripe/stripe-js';
-import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import clsx from 'clsx';
-import type { CustomPaymentSession, Address, MedusaAddress } from '@libs/types';
-import { CompleteCheckoutForm } from '../CompleteCheckoutForm';
 import { Alert } from '@app/components/common/alert/Alert';
 import { useCheckout } from '@app/hooks/useCheckout';
-import { medusaAddressToAddress } from '@libs/util';
 import { CompleteCheckoutFormData } from '@app/routes/api.checkout.complete';
+import type { Address, CustomPaymentSession, MedusaAddress } from '@libs/types';
+import { medusaAddressToAddress } from '@libs/util';
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { PaymentMethodCreateParams, StripePaymentElement } from '@stripe/stripe-js';
+import clsx from 'clsx';
+import { FC, FormEvent, PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { SubmitFunction } from 'react-router';
+import { CompleteCheckoutForm } from '../CompleteCheckoutForm';
 
 export interface StripePaymentFormProps extends PropsWithChildren {
   isActiveStep: boolean;

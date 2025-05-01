@@ -1,8 +1,8 @@
+import { StoreCollection, StoreProduct } from '@medusajs/types';
+import { type FC, Suspense } from 'react';
 import { Await, Link } from 'react-router';
-import { Suspense, type FC } from 'react';
 import ProductCarousel from '../product/ProductCarousel';
 import { ProductCarouselSkeleton } from '../product/ProductCarouselSkeleton';
-import { StoreCollection, StoreProduct } from '@medusajs/types';
 
 export interface CollectionListItemContentProps {
   collection: StoreCollection;

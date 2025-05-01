@@ -1,6 +1,6 @@
+import { Button, ButtonProps } from '@app/components/common/buttons/Button';
 import { FC } from 'react';
 import { useRemixFormContext } from 'remix-hook-form';
-import { Button, ButtonProps } from '@app/components/common/buttons/Button';
 
 export interface SubmitButtonProps extends ButtonProps {}
 

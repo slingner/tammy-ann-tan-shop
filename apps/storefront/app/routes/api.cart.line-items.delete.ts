@@ -1,9 +1,9 @@
-import { type ActionFunctionArgs, data } from 'react-router';
-import { getValidatedFormData } from 'remix-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { deleteLineItem, retrieveCart } from '@libs/util/server/data/cart.server';
 import { StoreCart } from '@medusajs/types';
+import { type ActionFunctionArgs, data } from 'react-router';
+import { getValidatedFormData } from 'remix-hook-form';
+import { z } from 'zod';
 
 const deleteLineItemSchema = z.object({
   lineItemId: z.string().min(1, 'Line item ID is required'),

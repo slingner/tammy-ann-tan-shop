@@ -1,6 +1,6 @@
+import { isBrowser } from '@libs/util/is-browser';
 import { FC } from 'react';
 import { Pagination, PaginationConfig } from './Pagination';
-import { isBrowser } from '@libs/util/is-browser';
 
 function getPaginationLink({
   context,

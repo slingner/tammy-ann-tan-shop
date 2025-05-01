@@ -1,13 +1,13 @@
-import { Container } from '@app/components/common/container';
-import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
-import { getMergedPageMeta } from '@libs/util/page';
-import Hero from '@app/components/sections/Hero';
-import { Image } from '@app/components/common/images/Image';
-import { ListItems } from '@app/components/sections/ListItems';
-import { SideBySide } from '@app/components/sections/SideBySide';
-import { GridCTA } from '@app/components/sections/GridCTA';
 import { ActionList } from '@app/components/common/actions-list/ActionList';
+import { Container } from '@app/components/common/container';
+import { Image } from '@app/components/common/images/Image';
+import { GridCTA } from '@app/components/sections/GridCTA';
+import Hero from '@app/components/sections/Hero';
+import { ListItems } from '@app/components/sections/ListItems';
 import ProductList from '@app/components/sections/ProductList';
+import { SideBySide } from '@app/components/sections/SideBySide';
+import { getMergedPageMeta } from '@libs/util/page';
+import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
 
 export const loader = async (args: LoaderFunctionArgs) => {
   return {};

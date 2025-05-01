@@ -1,10 +1,10 @@
-import type { FC, HTMLAttributes } from 'react';
-import clsx from 'clsx';
-import { ProductThumbnail } from './ProductThumbnail';
-import { ProductPrice } from './ProductPrice';
-import { ProductBadges } from './ProductBadges';
 import { useRegion } from '@app/hooks/useRegion';
 import { StoreProduct } from '@medusajs/types';
+import clsx from 'clsx';
+import type { FC, HTMLAttributes } from 'react';
+import { ProductBadges } from './ProductBadges';
+import { ProductPrice } from './ProductPrice';
+import { ProductThumbnail } from './ProductThumbnail';
 
 export interface ProductListItemProps extends HTMLAttributes<HTMLElement> {
   product: StoreProduct;

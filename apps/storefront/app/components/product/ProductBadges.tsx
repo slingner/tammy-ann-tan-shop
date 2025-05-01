@@ -1,7 +1,7 @@
-import { FC, HTMLAttributes } from 'react';
-import { useProductInventory } from '@app/hooks/useProductInventory';
 import { SoldOutBadge } from '@app/components/badges/SoldOutBadge';
+import { useProductInventory } from '@app/hooks/useProductInventory';
 import { StoreProduct } from '@medusajs/types';
+import { FC, HTMLAttributes } from 'react';
 
 interface ProductBadgesProps extends HTMLAttributes<HTMLElement> {
   product: StoreProduct;

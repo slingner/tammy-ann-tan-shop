@@ -1,7 +1,7 @@
-import { useContext } from 'react';
 import { CheckoutContext, CheckoutContextValue, CheckoutStep, useNextStep } from '@app/providers/checkout-provider';
-import { useFetchers } from 'react-router';
 import { FetcherCartKeyPrefix } from '@libs/util/fetcher-keys';
+import { useContext } from 'react';
+import { useFetchers } from 'react-router';
 
 const actions = ({ dispatch }: CheckoutContextValue) => ({
   setStep: (step: CheckoutStep) => dispatch({ name: 'setStep', payload: step }),

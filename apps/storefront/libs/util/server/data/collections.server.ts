@@ -1,8 +1,8 @@
+import cachified from '@epic-web/cachified';
 import { medusaError } from '@libs/util/medusaError';
 import { sdk, sdkCache } from '@libs/util/server/client.server';
 import { HttpTypes } from '@medusajs/types';
 import { MILLIS } from '../cache-builder.server';
-import cachified from '@epic-web/cachified';
 
 export const retrieveCollection = async function (id: string) {
   return sdk.store.collection.retrieve(id, {}).then(({ collection }) => collection);

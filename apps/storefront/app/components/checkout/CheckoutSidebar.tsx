@@ -1,8 +1,8 @@
-import { FC } from 'react';
-import clsx from 'clsx';
-import { CheckoutOrderSummary } from './CheckoutOrderSummary';
 import { useCheckout } from '@app/hooks/useCheckout';
 import { CheckoutStep } from '@app/providers/checkout-provider';
+import clsx from 'clsx';
+import { FC } from 'react';
+import { CheckoutOrderSummary } from './CheckoutOrderSummary';
 
 export const CheckoutSidebar: FC = () => {
   const { step } = useCheckout();

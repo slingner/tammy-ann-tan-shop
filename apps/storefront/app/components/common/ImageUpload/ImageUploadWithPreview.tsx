@@ -1,9 +1,9 @@
-import { useMemo, useRef, useState } from 'react';
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
-import { Image } from '../images/Image';
-import { ImageUploader } from './ImageUploader';
 import clsx from 'clsx';
+import { useMemo, useRef, useState } from 'react';
+import { Image } from '../images/Image';
 import { FormError } from '../remix-hook-form/forms/FormError';
+import { ImageUploader } from './ImageUploader';
 
 export interface ProductReviewImage {
   id?: string;

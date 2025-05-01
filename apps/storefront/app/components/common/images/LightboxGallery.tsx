@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
-import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Lightbox from 'yet-another-react-lightbox';
-import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
-import { ImageBase } from './ImageBase';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
+import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
+import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import { ImageBase } from './ImageBase';
 import 'yet-another-react-lightbox/plugins/captions.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/styles.css';

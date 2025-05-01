@@ -1,12 +1,12 @@
-import { NavLink } from 'react-router';
-import clsx from 'clsx';
-import { memo, type FC } from 'react';
-import { useScrollArrows } from '@app/hooks/useScrollArrows';
 import { ScrollArrowButtons } from '@app/components/common/buttons/ScrollArrowButtons';
+import { useScrollArrows } from '@app/hooks/useScrollArrows';
+import { StoreProduct } from '@medusajs/types';
+import clsx from 'clsx';
+import { type FC, memo } from 'react';
+import { NavLink } from 'react-router';
 import { ProductCarouselSkeleton } from './ProductCarouselSkeleton';
 import type { ProductListItemProps } from './ProductListItem';
 import { ProductListItem } from './ProductListItem';
-import { StoreProduct } from '@medusajs/types';
 
 export interface ProductCarouselProps {
   products?: StoreProduct[];

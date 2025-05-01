@@ -1,8 +1,8 @@
+import { Image } from '@app/components/common/images/Image';
+import { useSiteDetails } from '@app/hooks/useSiteDetails';
+import clsx from 'clsx';
 import type { FC, PropsWithChildren } from 'react';
 import { Link } from 'react-router';
-import clsx from 'clsx';
-import { useSiteDetails } from '@app/hooks/useSiteDetails';
-import { Image } from '@app/components/common/images/Image';
 
 const LogoHeader: FC<PropsWithChildren & { primary: boolean | undefined; className: string }> = ({
   primary,

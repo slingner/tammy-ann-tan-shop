@@ -1,5 +1,5 @@
-import { FC, HTMLAttributes } from 'react';
 import clsx from 'clsx';
+import { FC, HTMLAttributes } from 'react';
 
 export interface CardFooterProps extends HTMLAttributes<HTMLElement> {}
 

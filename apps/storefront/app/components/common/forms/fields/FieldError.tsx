@@ -1,5 +1,5 @@
-import { FC, HTMLAttributes, ReactElement } from 'react';
 import clsx from 'clsx';
+import { FC, HTMLAttributes, ReactElement } from 'react';
 
 export type FieldErrorComponent = (
   errorProps: Omit<FieldErrorProps, 'errorComponent'>,

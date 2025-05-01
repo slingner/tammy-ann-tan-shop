@@ -1,10 +1,10 @@
-import { formatLineItemPrice } from '@libs/util/prices';
-import clsx from 'clsx';
-import type { FC } from 'react';
-import { useRemoveCartItem } from '@app/hooks/useRemoveCartItem';
 import { Button } from '@app/components/common/buttons/Button';
 import { Image } from '@app/components/common/images/Image';
+import { useRemoveCartItem } from '@app/hooks/useRemoveCartItem';
+import { formatLineItemPrice } from '@libs/util/prices';
 import { StoreCartLineItem } from '@medusajs/types';
+import clsx from 'clsx';
+import type { FC } from 'react';
 
 export interface CartDrawerItemProps {
   item: StoreCartLineItem;

@@ -1,9 +1,9 @@
-import { type FC, useState } from 'react';
-import { ShareButton } from './ShareButton';
-import { ShareModal } from './ShareModal';
 import { type ButtonBaseProps, IconButton } from '@app/components/common/buttons';
 import ArrowUpOnSquareIcon from '@heroicons/react/24/outline/ArrowUpOnSquareIcon';
+import { type FC, useState } from 'react';
 import { ShareItemType } from './Share.types';
+import { ShareButton } from './ShareButton';
+import { ShareModal } from './ShareModal';
 
 export interface ShareProps {
   itemType?: ShareItemType;

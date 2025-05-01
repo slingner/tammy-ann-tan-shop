@@ -1,9 +1,9 @@
 import { formatPrice, getCheapestProductVariant, getVariantFinalPrice, getVariantPrices } from '@libs/util/prices';
+import { StoreProduct, StoreProductOption, StoreProductOptionValue, StoreProductVariant } from '@medusajs/types';
 import type { MetaFunction } from 'react-router';
 import { UIMatch } from 'react-router';
 import { getCommonMeta, getParentMeta, mergeMeta } from './meta';
 import { RootLoaderResponse } from './server/root.server';
-import { StoreProduct, StoreProductOption, StoreProductOptionValue, StoreProductVariant } from '@medusajs/types';
 
 /**
  * Finds a variant that matches all selected options

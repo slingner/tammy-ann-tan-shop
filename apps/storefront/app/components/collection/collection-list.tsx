@@ -1,6 +1,6 @@
+import { StoreCollection, StoreProduct } from '@medusajs/types';
 import type { FC } from 'react';
 import type { CollectionListItemProps } from './collection-list-item';
-import { StoreCollection, StoreProduct } from '@medusajs/types';
 
 export const CollectionList: FC<{
   title?: string;

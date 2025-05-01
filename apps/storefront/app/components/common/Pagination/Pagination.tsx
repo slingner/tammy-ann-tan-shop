@@ -1,9 +1,9 @@
 import ChevronLeftIcon from '@heroicons/react/24/solid/ChevronLeftIcon';
 import ChevronRightIcon from '@heroicons/react/24/solid/ChevronRightIcon';
-import { FC, ReactNode, useEffect } from 'react';
-import { usePagination } from './react-use-pagination';
 import clsx from 'clsx';
+import { FC, ReactNode, useEffect } from 'react';
 import { Link } from 'react-router';
+import { usePagination } from './react-use-pagination';
 
 export interface PaginationConfig {
   prefix?: string;

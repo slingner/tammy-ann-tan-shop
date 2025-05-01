@@ -1,7 +1,7 @@
 import { Container } from '@app/components/common/container';
-import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
-import { getMergedPageMeta } from '@libs/util/page';
 import Hero from '@app/components/sections/Hero';
+import { getMergedPageMeta } from '@libs/util/page';
+import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
 
 const locations: LocationProps[] = [
   {

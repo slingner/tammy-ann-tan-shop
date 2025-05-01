@@ -1,6 +1,6 @@
 import { createCookie } from 'react-router';
-import { getCookie } from './cookies.server';
 import { config } from './config.server';
+import { getCookie } from './cookies.server';
 
 export const authCookie = createCookie(config.AUTH_COOKIE_NAME);
 

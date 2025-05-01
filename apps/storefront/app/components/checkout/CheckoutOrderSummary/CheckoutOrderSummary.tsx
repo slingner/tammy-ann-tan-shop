@@ -1,8 +1,8 @@
 import { useCheckout } from '@app/hooks/useCheckout';
+import { PromotionDTO, StoreCart } from '@medusajs/types';
 import { FC, ReactNode } from 'react';
 import { CheckoutOrderSummaryItems } from './CheckoutOrderSummaryItems';
 import { CheckoutOrderSummaryTotals } from './CheckoutOrderSummaryTotals';
-import { PromotionDTO, StoreCart } from '@medusajs/types';
 
 export interface CheckoutOrderSummaryProps {
   submitButton?: ReactNode;

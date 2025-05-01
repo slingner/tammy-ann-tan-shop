@@ -1,8 +1,8 @@
-import type { FC, ReactNode } from 'react';
-import clsx from 'clsx';
-import { Header } from './header/Header';
-import { Footer } from './footer/Footer';
 import { CartDrawer } from '@app/components/cart/CartDrawer';
+import clsx from 'clsx';
+import type { FC, ReactNode } from 'react';
+import { Footer } from './footer/Footer';
+import { Header } from './header/Header';
 export interface PageProps {
   className?: string;
   children: ReactNode;

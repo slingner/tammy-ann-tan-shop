@@ -1,5 +1,5 @@
-import { type FC, forwardRef } from 'react';
 import clsx from 'clsx';
+import { type FC, forwardRef } from 'react';
 import { ButtonBase, type ButtonBaseProps, ButtonRef } from './ButtonBase';
 
 export interface ButtonProps extends ButtonBaseProps {

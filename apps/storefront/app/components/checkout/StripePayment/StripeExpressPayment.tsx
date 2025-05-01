@@ -1,10 +1,10 @@
-import { type FC } from 'react';
-import { StripeExpressCheckoutForm } from './StripeExpressPaymentForm';
-import { StripeElementsOptionsMode } from '@stripe/stripe-js';
-import { StripeElementsProvider } from './StripeElementsProvider';
-import { StoreCart } from '@medusajs/types';
 import { useCheckout } from '@app/hooks/useCheckout';
 import { amountToStripeExpressCheckoutAmount } from '@libs/util/checkout/amountToStripeExpressCheckoutAmount';
+import { StoreCart } from '@medusajs/types';
+import { StripeElementsOptionsMode } from '@stripe/stripe-js';
+import { type FC } from 'react';
+import { StripeElementsProvider } from './StripeElementsProvider';
+import { StripeExpressCheckoutForm } from './StripeExpressPaymentForm';
 
 interface StripeExpressCheckoutProps {
   cart: StoreCart;

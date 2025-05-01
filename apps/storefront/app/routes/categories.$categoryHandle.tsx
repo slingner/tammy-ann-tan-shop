@@ -1,11 +1,11 @@
+import { Container } from '@app/components/common/container';
+import { ProductListWithPagination } from '@app/components/product/ProductListWithPagination';
+import { PageHeading } from '@app/components/sections/PageHeading';
+import { listCategories } from '@libs/util/server/data/categories.server';
+import { fetchProducts } from '@libs/util/server/products.server';
+import clsx from 'clsx';
 import { LoaderFunctionArgs, redirect } from 'react-router';
 import { NavLink, useLoaderData } from 'react-router';
-import { ProductListWithPagination } from '@app/components/product/ProductListWithPagination';
-import { Container } from '@app/components/common/container';
-import { listCategories } from '@libs/util/server/data/categories.server';
-import { PageHeading } from '@app/components/sections/PageHeading';
-import clsx from 'clsx';
-import { fetchProducts } from '@libs/util/server/products.server';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const handle = params.categoryHandle as string;

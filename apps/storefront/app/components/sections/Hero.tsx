@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-import type { CustomAction, ImageField } from '@libs/types';
 import { ActionList } from '@app/components/common/actions-list/ActionList';
 import { Container } from '@app/components/common/container/Container';
+import type { CustomAction, ImageField } from '@libs/types';
+import clsx from 'clsx';
 import type { FC, ReactNode } from 'react';
 
 export const Hero: FC<{

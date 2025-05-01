@@ -1,9 +1,9 @@
-import { FC, useState, MouseEvent } from 'react';
 import EyeIcon from '@heroicons/react/24/outline/EyeIcon';
 import EyeSlashIcon from '@heroicons/react/24/outline/EyeSlashIcon';
 import { TextField, type TextFieldProps } from '@lambdacurry/forms/remix-hook-form';
-import { IconButton } from '../../../buttons/IconButton';
+import { FC, MouseEvent, useState } from 'react';
 import { useRemixFormContext } from 'remix-hook-form';
+import { IconButton } from '../../../buttons/IconButton';
 
 export interface StyledPasswordProps extends Omit<TextFieldProps, 'type'> {}
 

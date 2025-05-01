@@ -1,7 +1,7 @@
-import { FC, useEffect } from 'react';
+import { Alert } from '@app/components/common/alert/Alert';
 import { useCheckout } from '@app/hooks/useCheckout';
 import { useCustomer } from '@app/hooks/useCustomer';
-import { Alert } from '@app/components/common/alert/Alert';
+import { FC, useEffect } from 'react';
 import { CheckoutAccountDetails } from './CheckoutAccountDetails';
 import { CheckoutDeliveryMethod } from './CheckoutDeliveryMethod';
 import { CheckoutPayment } from './CheckoutPayment';

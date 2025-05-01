@@ -1,11 +1,11 @@
-import type { ElementType, FC, PropsWithChildren } from 'react';
-import { Fragment } from 'react';
 import {
   MenuItem as HeadlessMenuItem,
   type MenuItemsProps as HeadlessMenuItemsProps,
   Transition,
 } from '@headlessui/react';
 import clsx from 'clsx';
+import type { ElementType, FC, PropsWithChildren } from 'react';
+import { Fragment } from 'react';
 
 export type MenuItemsProps = HeadlessMenuItemsProps<ElementType> & {
   position?:

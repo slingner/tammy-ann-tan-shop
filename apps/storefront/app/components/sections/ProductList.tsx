@@ -1,14 +1,14 @@
-import { buildSearchParamsFromObject } from '@libs/util/buildSearchParamsFromObject';
-import type { CustomAction, ProductListFilter } from '@libs/types';
-import { useFetcher, useParams } from 'react-router';
-import clsx from 'clsx';
-import { HTMLAttributes, memo, useEffect, useState, type FC } from 'react';
+import { Container } from '@app/components/common/container/Container';
+import ProductCarousel from '@app/components/product/ProductCarousel';
 import { ProductCategoryTabs } from '@app/components/product/ProductCategoryTabs';
 import { ProductCollectionTabs } from '@app/components/product/ProductCollectionTabs';
 import { ProductListHeader } from '@app/components/product/ProductListHeader';
-import { Container } from '@app/components/common/container/Container';
+import type { CustomAction, ProductListFilter } from '@libs/types';
+import { buildSearchParamsFromObject } from '@libs/util/buildSearchParamsFromObject';
 import { StoreCollection, StoreProduct, StoreProductCategory } from '@medusajs/types';
-import ProductCarousel from '@app/components/product/ProductCarousel';
+import clsx from 'clsx';
+import { type FC, HTMLAttributes, memo, useEffect, useState } from 'react';
+import { useFetcher, useParams } from 'react-router';
 
 export interface ProductListProps<TElement extends HTMLElement = HTMLDivElement> extends HTMLAttributes<TElement> {
   heading?: string;

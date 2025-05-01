@@ -11,10 +11,11 @@ import { TextField } from '@lambdacurry/forms/remix-hook-form';
 import type { MedusaAddress } from '@libs/types';
 import { medusaAddressToAddress } from '@libs/util';
 import { checkAccountDetailsComplete } from '@libs/util/checkout';
+import { FetcherKeys } from '@libs/util/fetcher-keys';
 import type { StoreRegion, StoreRegionCountry } from '@medusajs/types';
-import { useFetcher } from 'react-router';
 import { useEffect } from 'react';
 import { FieldErrors } from 'react-hook-form';
+import { useFetcher } from 'react-router';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
 import { SubmitButton } from '../common/remix-hook-form/buttons/SubmitButton';
 import { FormError } from '../common/remix-hook-form/forms/FormError';
@@ -23,7 +24,6 @@ import HiddenAddressGroup from './HiddenAddressGroup';
 import { MedusaStripeAddress, type StripeAddress } from './MedusaStripeAddress/MedusaStripeAddress';
 import { AddressDisplay } from './address/AddressDisplay';
 import { selectInitialShippingAddress } from './checkout-form-helpers';
-import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 const NEW_SHIPPING_ADDRESS_ID = 'new';
 

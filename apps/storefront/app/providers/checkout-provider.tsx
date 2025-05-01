@@ -1,9 +1,9 @@
+import { useCustomer } from '@app/hooks/useCustomer';
 import { checkAccountDetailsComplete, checkContactInfoComplete } from '@libs/util/checkout';
 import { createReducer } from '@libs/util/createReducer';
-import { createContext, FC, PropsWithChildren, useMemo, useReducer } from 'react';
-import { useCustomer } from '@app/hooks/useCustomer';
 import { StoreCart, StoreCartShippingOption, StorePaymentProvider } from '@medusajs/types';
 import { BasePaymentSession } from '@medusajs/types/dist/http/payment/common';
+import { FC, PropsWithChildren, createContext, useMemo, useReducer } from 'react';
 import { ContextValue } from '../../types';
 
 export enum CheckoutStep {

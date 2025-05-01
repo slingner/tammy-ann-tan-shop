@@ -1,5 +1,5 @@
-import type { FC, HTMLAttributes, PropsWithChildren } from 'react';
 import clsx from 'clsx';
+import type { FC, HTMLAttributes, PropsWithChildren } from 'react';
 
 export const Container: FC<PropsWithChildren & HTMLAttributes<HTMLDivElement> & { className?: string }> = ({
   className,

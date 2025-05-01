@@ -1,11 +1,11 @@
-import { type FC, useState } from 'react';
-import { Modal, type ModalProps } from '@app/components/common/modals/Modal';
-import { Input } from '@app/components/common/forms/inputs/Input';
-import { Button } from '@app/components/common/buttons/Button';
-import LinkIcon from '@heroicons/react/24/outline/LinkIcon';
-import CheckIcon from '@heroicons/react/24/outline/CheckIcon';
 import { FacebookIcon, TwitterIcon } from '@app/components/common/assets/icons';
+import { Button } from '@app/components/common/buttons/Button';
+import { Input } from '@app/components/common/forms/inputs/Input';
+import { Modal, type ModalProps } from '@app/components/common/modals/Modal';
+import CheckIcon from '@heroicons/react/24/outline/CheckIcon';
+import LinkIcon from '@heroicons/react/24/outline/LinkIcon';
 import { isBrowser } from '@libs/util/is-browser';
+import { type FC, useState } from 'react';
 import { type ShareItemType } from './Share.types';
 
 type ShareState = 'pending' | 'success' | 'error';

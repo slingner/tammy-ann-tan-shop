@@ -14,7 +14,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ className, erro
       'block h-12 w-full rounded-md border-none px-3 outline-none focus:ring-0',
       { 'bg-gray-100': props.readOnly },
       { 'border-red-600': !!error },
-      className
+      className,
     )}
   />
 ));

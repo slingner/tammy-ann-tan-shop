@@ -1,9 +1,9 @@
-import { FC, HTMLAttributes } from 'react';
-import clsx from 'clsx';
-import { CheckoutOrderSummaryDiscountCode } from './CheckoutOrderSummaryDiscountCode';
-import { formatPrice } from '@libs/util/prices';
 import { calculateEstimatedShipping } from '@libs/util/carts';
+import { formatPrice } from '@libs/util/prices';
 import { PromotionDTO, StoreCart, StoreCartShippingOption, StoreRegion } from '@medusajs/types';
+import clsx from 'clsx';
+import { FC, HTMLAttributes } from 'react';
+import { CheckoutOrderSummaryDiscountCode } from './CheckoutOrderSummaryDiscountCode';
 
 export interface CheckoutOrderSummaryTotalsProps extends HTMLAttributes<HTMLDListElement> {
   cart: StoreCart & { promotions: PromotionDTO[] };

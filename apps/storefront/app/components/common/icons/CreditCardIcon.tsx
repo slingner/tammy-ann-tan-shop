@@ -1,6 +1,7 @@
-import { FC, HTMLAttributes } from 'react';
 import HeroCreditCardIcon from '@heroicons/react/24/solid/CreditCardIcon';
+import { type CreditCardBrand } from '@libs/types';
 import clsx from 'clsx';
+import { FC, HTMLAttributes } from 'react';
 import {
   AmericanExpressIcon,
   DinersClubIcon,
@@ -10,7 +11,6 @@ import {
   UnionPayIcon,
   VisaIcon,
 } from '../assets/icons';
-import { type CreditCardBrand } from '@libs/types';
 
 export interface CreditCardIconProps extends HTMLAttributes<HTMLSpanElement> {
   brand: CreditCardBrand;

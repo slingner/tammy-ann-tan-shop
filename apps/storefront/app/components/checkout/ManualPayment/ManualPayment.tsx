@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from 'react';
 import { CustomPaymentSession } from '@libs/types';
+import { FC, PropsWithChildren } from 'react';
 import { CompleteCheckoutForm } from '../CompleteCheckoutForm';
 
 export interface ManualPaymentProps extends PropsWithChildren {

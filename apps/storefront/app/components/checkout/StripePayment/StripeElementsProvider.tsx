@@ -1,8 +1,8 @@
-import { FC, PropsWithChildren, useMemo } from 'react';
-import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import { useEnv } from '@app/hooks/useEnv';
 import { useCheckout } from '@app/hooks/useCheckout';
+import { useEnv } from '@app/hooks/useEnv';
+import { Elements } from '@stripe/react-stripe-js';
+import { StripeElementsOptions, loadStripe } from '@stripe/stripe-js';
+import { FC, PropsWithChildren, useMemo } from 'react';
 
 export interface StripeElementsProviderProps extends PropsWithChildren {
   options?: StripeElementsOptions;

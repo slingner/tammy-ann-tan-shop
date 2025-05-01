@@ -1,8 +1,8 @@
-import type { FC } from 'react';
-import { IconButton } from './IconButton';
-import clsx from 'clsx';
 import ArrowLeftIcon from '@heroicons/react/24/solid/ArrowLeftIcon';
 import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
+import clsx from 'clsx';
+import type { FC } from 'react';
+import { IconButton } from './IconButton';
 
 interface ScrollArrowButtonsProps {
   className?: string;

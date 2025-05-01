@@ -1,5 +1,5 @@
-import { FC, ImgHTMLAttributes } from 'react';
 import clsx from 'clsx';
+import { FC, ImgHTMLAttributes } from 'react';
 import { ImageBase } from './ImageBase';
 
 export interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {

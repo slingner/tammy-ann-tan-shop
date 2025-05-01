@@ -1,8 +1,8 @@
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon';
-import { StoreCart, StoreCartPromotion } from '@medusajs/types';
-import { useFetcher } from 'react-router';
-import { FC } from 'react';
 import { FetcherKeys } from '@libs/util/fetcher-keys';
+import { StoreCart, StoreCartPromotion } from '@medusajs/types';
+import { FC } from 'react';
+import { useFetcher } from 'react-router';
 
 export interface RemoveDiscountCodeButtonProps {
   cart: StoreCart;

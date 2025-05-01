@@ -1,8 +1,8 @@
-import type { FC } from 'react';
-import clsx from 'clsx';
 import StarIcon from '@heroicons/react/24/solid/StarIcon';
-import { StarRating } from './StarRating';
 import { StoreProductReviewStats } from '@lambdacurry/medusa-plugins-sdk';
+import clsx from 'clsx';
+import type { FC } from 'react';
+import { StarRating } from './StarRating';
 
 export interface ProductReviewSummaryProps {
   stats?: StoreProductReviewStats;

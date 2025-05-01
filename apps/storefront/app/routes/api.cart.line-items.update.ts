@@ -1,8 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { updateLineItem } from '@libs/util/server/data/cart.server';
 import { type ActionFunctionArgs, data } from 'react-router';
 import { getValidatedFormData } from 'remix-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { updateLineItem } from '@libs/util/server/data/cart.server';
 
 export const updateLineItemSchema = z.object({
   lineItemId: z.string().min(1, 'Line item ID is required'),

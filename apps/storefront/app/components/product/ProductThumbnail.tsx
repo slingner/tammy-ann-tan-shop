@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-import { FC, HTMLAttributes } from 'react';
 import { Image } from '@app/components/common/images/Image';
 import { StoreProduct } from '@medusajs/types';
+import clsx from 'clsx';
+import { FC, HTMLAttributes } from 'react';
 
 export interface ProductThumbnailProps extends HTMLAttributes<HTMLElement> {
   product: StoreProduct;

@@ -1,6 +1,9 @@
-import ShoppingCartIcon from '@heroicons/react/24/outline/ShoppingCartIcon';
+import { CheckoutFlow } from '@app/components/checkout/CheckoutFlow';
+import { CheckoutSidebar } from '@app/components/checkout/CheckoutSidebar';
+import { Empty } from '@app/components/common/Empty/Empty';
 import { Button } from '@app/components/common/buttons/Button';
 import { CheckoutProvider } from '@app/providers/checkout-provider';
+import ShoppingCartIcon from '@heroicons/react/24/outline/ShoppingCartIcon';
 import { sdk } from '@libs/util/server/client.server';
 import { getCartId, removeCartId } from '@libs/util/server/cookies.server';
 import { initiatePaymentSession, retrieveCart, setShippingMethod } from '@libs/util/server/data/cart.server';
@@ -9,9 +12,6 @@ import { CartDTO, StoreCart, StoreCartShippingOption, StorePaymentProvider } fro
 import { BasePaymentSession } from '@medusajs/types/dist/http/payment/common';
 import { LoaderFunctionArgs, redirect } from 'react-router';
 import { Link, useLoaderData } from 'react-router';
-import { Empty } from '@app/components/common/Empty/Empty';
-import { CheckoutFlow } from '@app/components/checkout/CheckoutFlow';
-import { CheckoutSidebar } from '@app/components/checkout/CheckoutSidebar';
 
 const SYSTEM_PROVIDER_ID = 'pp_system_default';
 

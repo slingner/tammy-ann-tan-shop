@@ -1,10 +1,10 @@
-import { NavLink, useNavigation } from 'react-router';
+import { StoreProduct } from '@medusajs/types';
 import clsx from 'clsx';
 import type { FC } from 'react';
+import { NavLink, useNavigation } from 'react-router';
 import { ProductGridSkeleton } from './ProductGridSkeleton';
 import { ProductListHeader, type ProductListHeaderProps } from './ProductListHeader';
 import { ProductListItem } from './ProductListItem';
-import { StoreProduct } from '@medusajs/types';
 
 export interface ProductListProps extends Partial<ProductListHeaderProps> {
   products?: StoreProduct[];

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
 import debounce from 'lodash/debounce';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const updateArrowsVisibility = ({
   scrollableDiv,

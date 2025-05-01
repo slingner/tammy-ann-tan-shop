@@ -1,13 +1,13 @@
-import ChevronDownIcon from '@heroicons/react/24/solid/ChevronDownIcon';
-import { NavLink } from 'react-router';
-import clsx from 'clsx';
-import type { FC } from 'react';
 import { Button } from '@app/components/common/buttons/Button';
 import { Menu } from '@app/components/common/menu/Menu';
 import { MenuButton } from '@app/components/common/menu/MenuButton';
 import { MenuItem } from '@app/components/common/menu/MenuItem';
 import { MenuItems } from '@app/components/common/menu/MenuItems';
+import ChevronDownIcon from '@heroicons/react/24/solid/ChevronDownIcon';
 import { StoreProductTag } from '@medusajs/types';
+import clsx from 'clsx';
+import type { FC } from 'react';
+import { NavLink } from 'react-router';
 
 export interface ProductTagsMenuProps {
   tags?: StoreProductTag[];

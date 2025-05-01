@@ -1,8 +1,8 @@
-import type { FC } from 'react';
-import { PaginationWithContext } from '@app/components/common/Pagination/pagination-with-context';
-import { type ProductListProps, ProductGrid } from '@app/components/product/ProductGrid';
 import type { PaginationConfig } from '@app/components/common/Pagination';
+import { PaginationWithContext } from '@app/components/common/Pagination/pagination-with-context';
+import { ProductGrid, type ProductListProps } from '@app/components/product/ProductGrid';
 import { StoreProduct } from '@medusajs/types';
+import type { FC } from 'react';
 
 export interface ProductListWithPaginationProps extends ProductListProps {
   products?: StoreProduct[];

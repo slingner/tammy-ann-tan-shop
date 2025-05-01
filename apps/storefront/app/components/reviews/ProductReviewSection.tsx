@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import ProductReviewSummary from './ReviewSummary';
-import { ProductReviewListWithPagination } from './ReviewListWithPagination';
 import { useRouteLoaderData } from 'react-router';
 import { ProductPageLoaderData } from '../../routes/products.$productHandle';
+import { ProductReviewListWithPagination } from './ReviewListWithPagination';
+import ProductReviewSummary from './ReviewSummary';
 
 export const ProductReviewSection: FC = () => {
   const data = useRouteLoaderData<ProductPageLoaderData>('routes/products.$productHandle');

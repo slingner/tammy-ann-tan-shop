@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren } from 'react';
 import { TabList as HeadlessTabList } from '@headlessui/react';
 import clsx from 'clsx';
+import { FC, PropsWithChildren } from 'react';
 
 export interface TabListProps {
   className?: string;

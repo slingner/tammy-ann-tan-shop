@@ -1,6 +1,6 @@
 import { MedusaPluginsSDK } from '@lambdacurry/medusa-plugins-sdk';
-import { config } from './config.server';
 import { buildNewLRUCache } from './cache-builder.server';
+import { config } from './config.server';
 
 // Defaults to standard port for Medusa server
 let MEDUSA_BACKEND_URL = 'http://localhost:9000';

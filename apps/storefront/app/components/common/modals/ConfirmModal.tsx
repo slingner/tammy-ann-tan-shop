@@ -1,7 +1,7 @@
 import { FC, ReactNode, useState } from 'react';
-import { Modal, ModalProps } from './Modal';
 import { Actions } from '../actions';
 import { Button } from '../buttons';
+import { Modal, ModalProps } from './Modal';
 
 export interface ConfirmModalProps extends ModalProps {
   title?: ReactNode;

@@ -1,7 +1,7 @@
-import { type FC, useMemo } from 'react';
 import { formatPrice, getVariantFinalPrice, sortProductVariantsByPrice } from '@libs/util/prices';
-import { ProductVariantPrice } from './ProductVariantPrice';
 import { StoreProduct } from '@medusajs/types';
+import { type FC, useMemo } from 'react';
+import { ProductVariantPrice } from './ProductVariantPrice';
 
 export interface ProductPriceRangeProps {
   product: StoreProduct;

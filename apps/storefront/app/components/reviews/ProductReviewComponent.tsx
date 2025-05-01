@@ -1,9 +1,9 @@
-import { FC, useState } from 'react';
-import { ProductReviewView } from './ProductReviewView';
-import { ProductReviewForm } from './ProductReviewForm';
+import { Image } from '@app/components/common/images/Image';
 import { StoreProductReview } from '@lambdacurry/medusa-plugins-sdk';
 import { StoreOrderLineItem } from '@medusajs/types';
-import { Image } from '@app/components/common/images/Image';
+import { FC, useState } from 'react';
+import { ProductReviewForm } from './ProductReviewForm';
+import { ProductReviewView } from './ProductReviewView';
 
 export interface ProductReviewProps {
   lineItem?: StoreOrderLineItem;

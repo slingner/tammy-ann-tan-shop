@@ -1,6 +1,6 @@
+import { medusaError } from '@libs/util/medusaError';
 import { sdk } from '@libs/util/server/client.server';
 import { withAuthHeaders } from '../auth.server';
-import { medusaError } from '@libs/util/medusaError';
 
 export const retrieveOrder = withAuthHeaders(async (request, authHeaders, id: string) => {
   return sdk.store.order

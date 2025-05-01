@@ -4,7 +4,7 @@ import { StyledPassword } from '../forms/fields/StyledPassword';
 
 export interface ConfirmPasswordFieldGroupProps extends FieldGroupProps {}
 
-export const ConfirmPasswordFieldGroup: FC<ConfirmPasswordFieldGroupProps> = props => (
+export const ConfirmPasswordFieldGroup: FC<ConfirmPasswordFieldGroupProps> = (props) => (
   <FieldGroup {...props}>
     <div className="col-span-12">
       <StyledPassword name="password" label="Password" autoComplete="new-password" />

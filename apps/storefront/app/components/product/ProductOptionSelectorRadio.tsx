@@ -1,8 +1,8 @@
 import { Label, Radio, RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { formatPrice } from '@libs/util/prices';
 import clsx from 'clsx';
 import type { FC } from 'react';
-import { formatPrice } from '@libs/util/prices';
 
 export interface ProductOptionSelectorProps {
   option: {

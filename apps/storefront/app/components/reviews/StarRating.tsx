@@ -17,7 +17,7 @@ export const StarRating: FC<
       itemStyles={{
         itemShapes: RoundedStar,
         activeFillColor: '#fbbf24',
-        inactiveFillColor: '#bdbdbd'
+        inactiveFillColor: '#bdbdbd',
       }}
       value={value}
       {...props}

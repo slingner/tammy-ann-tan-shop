@@ -1,13 +1,13 @@
-import { FC, useMemo } from 'react';
-import { Tab } from '@headlessui/react';
-import { StripePayment } from './StripePayment';
-import { ManualPayment } from './ManualPayment/ManualPayment';
-import clsx from 'clsx';
-import { useCheckout } from '@app/hooks/useCheckout';
-import { CheckoutStep } from '@app/providers/checkout-provider';
 import { Button } from '@app/components/common/buttons/Button';
-import { CustomPaymentSession } from '@libs/types';
+import { useCheckout } from '@app/hooks/useCheckout';
 import { useEnv } from '@app/hooks/useEnv';
+import { CheckoutStep } from '@app/providers/checkout-provider';
+import { Tab } from '@headlessui/react';
+import { CustomPaymentSession } from '@libs/types';
+import clsx from 'clsx';
+import { FC, useMemo } from 'react';
+import { ManualPayment } from './ManualPayment/ManualPayment';
+import { StripePayment } from './StripePayment';
 
 export const CheckoutPayment: FC = () => {
   const { env } = useEnv();

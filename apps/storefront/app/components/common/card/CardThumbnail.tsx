@@ -1,5 +1,5 @@
-import { type FC } from 'react';
 import clsx from 'clsx';
+import { type FC } from 'react';
 import { Image } from '../images/Image';
 
 export interface CardThumbnailProps extends React.ImgHTMLAttributes<HTMLImageElement> {

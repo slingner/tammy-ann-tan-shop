@@ -1,9 +1,9 @@
+import { LightboxGallery } from '@app/components/common/images/LightboxGallery';
+import { StoreProductReview } from '@lambdacurry/medusa-plugins-sdk';
+import { formatDate } from '@libs/util';
 import { type FC, useState } from 'react';
 import { ReviewImageThumbnailRow } from './ReviewImageThumbnailRow';
 import { StarRating } from './StarRating';
-import { StoreProductReview } from '@lambdacurry/medusa-plugins-sdk';
-import { formatDate } from '@libs/util';
-import { LightboxGallery } from '@app/components/common/images/LightboxGallery';
 
 export interface ProductReviewListProps {
   productReviews?: StoreProductReview[];

@@ -1,8 +1,8 @@
+import { URLAwareNavLink } from '@app/components/common/link';
+import { SectionHeading } from '@app/components/sections/SectionHeading';
 import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
 import { CustomAction } from '@libs/types';
 import { FC, PropsWithChildren, ReactNode } from 'react';
-import { SectionHeading } from '@app/components/sections/SectionHeading';
-import { URLAwareNavLink } from '@app/components/common/link';
 
 export interface ProductListHeaderProps extends PropsWithChildren {
   className?: string;

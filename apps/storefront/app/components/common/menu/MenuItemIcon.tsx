@@ -1,5 +1,5 @@
-import type { FC, HTMLAttributes } from 'react';
 import clsx from 'clsx';
+import type { FC, HTMLAttributes } from 'react';
 
 export interface MenuItemIconProps extends HTMLAttributes<SVGElement | HTMLElement> {
   icon: FC<HTMLAttributes<SVGElement | HTMLElement>>;

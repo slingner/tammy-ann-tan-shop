@@ -1,5 +1,5 @@
-import { type FC } from 'react';
 import { ButtonBase, ButtonBaseProps } from '@app/components/common/buttons/ButtonBase';
+import { type FC } from 'react';
 
 export interface ShareButtonProps {
   shareData: ShareData;

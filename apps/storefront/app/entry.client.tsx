@@ -1,9 +1,9 @@
 // https://github.com/remix-run/remix/issues/2947
 
-import { HydratedRouter } from 'react-router/dom';
 import * as Sentry from '@sentry/remix';
-import { startTransition, StrictMode } from 'react';
+import { StrictMode, startTransition } from 'react';
 import { hydrateRoot } from 'react-dom/client';
+import { HydratedRouter } from 'react-router/dom';
 
 declare global {
   interface Window {

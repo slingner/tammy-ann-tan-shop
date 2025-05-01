@@ -1,12 +1,12 @@
-import { FC, memo, useState } from 'react';
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
-import clsx from 'clsx';
-import { Image } from '@app/components/common/images/Image';
-import { useScrollArrows } from '@app/hooks/useScrollArrows';
 import { ScrollArrowButtons } from '@app/components/common/buttons/ScrollArrowButtons';
+import { Image } from '@app/components/common/images/Image';
 import { LightboxGallery } from '@app/components/common/images/LightboxGallery';
+import { useScrollArrows } from '@app/hooks/useScrollArrows';
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { MagnifyingGlassPlusIcon } from '@heroicons/react/24/outline';
 import { StoreProduct } from '@medusajs/types';
+import clsx from 'clsx';
+import { FC, memo, useState } from 'react';
 
 export interface ProductGalleryImage {
   id: string;

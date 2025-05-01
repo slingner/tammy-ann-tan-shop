@@ -1,4 +1,3 @@
-import { SiteSettings } from '@libs/types';
 import {
   FacebookIcon,
   InstagramIcon,
@@ -10,6 +9,7 @@ import {
   YoutubeIcon,
 } from '@app/components/common/assets/icons';
 import { IconButton } from '@app/components/common/buttons/IconButton';
+import { SiteSettings } from '@libs/types';
 import type { FC } from 'react';
 
 export const SocialIcons: FC<{ siteSettings?: SiteSettings }> = ({ siteSettings }) => {

@@ -1,11 +1,11 @@
-import { AddressElement, Elements } from '@stripe/react-stripe-js';
-import { type AddressMode, loadStripe, StripeAddressElementChangeEvent } from '@stripe/stripe-js';
-import { useMemo, type Dispatch, type FC, type SetStateAction } from 'react';
+import { useCheckout } from '@app/hooks/useCheckout';
 import { useEnv } from '@app/hooks/useEnv';
 import { useRegion } from '@app/hooks/useRegion';
-import { BaseCartAddress } from '@medusajs/types/dist/http/cart/common';
-import { useCheckout } from '@app/hooks/useCheckout';
 import { Address } from '@libs/types';
+import { BaseCartAddress } from '@medusajs/types/dist/http/cart/common';
+import { AddressElement, Elements } from '@stripe/react-stripe-js';
+import { type AddressMode, StripeAddressElementChangeEvent, loadStripe } from '@stripe/stripe-js';
+import { type Dispatch, type FC, type SetStateAction, useMemo } from 'react';
 
 export interface StripeAddress {
   address: Address;

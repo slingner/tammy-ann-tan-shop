@@ -1,8 +1,8 @@
+import cachified from '@epic-web/cachified';
 import { sdk, sdkCache } from '@libs/util/server/client.server';
 import { HttpTypes } from '@medusajs/types';
-import { getSelectedRegion } from './data/regions.server';
-import cachified from '@epic-web/cachified';
 import { MILLIS } from './cache-builder.server';
+import { getSelectedRegion } from './data/regions.server';
 
 export const fetchProducts = async (request: Request, { ...query }: HttpTypes.StoreProductListParams = {}) => {
   const region = await getSelectedRegion(request.headers);

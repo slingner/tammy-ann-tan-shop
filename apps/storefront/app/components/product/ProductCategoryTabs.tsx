@@ -1,8 +1,8 @@
-import { Tab } from '@headlessui/react';
-import { StoreProductCategory } from '@medusajs/types';
-import { Fragment, type FC } from 'react';
 import { TabButton } from '@app/components/tabs/TabButton';
 import { TabList } from '@app/components/tabs/TabList';
+import { Tab } from '@headlessui/react';
+import { StoreProductCategory } from '@medusajs/types';
+import { type FC, Fragment } from 'react';
 
 export interface ProductCategoryTabsProps {
   categories: StoreProductCategory[];

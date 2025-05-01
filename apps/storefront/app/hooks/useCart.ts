@@ -1,9 +1,9 @@
+import { FetcherKeys } from '@libs/util/fetcher-keys';
+import { StoreCart } from '@medusajs/types';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFetchers } from 'react-router';
 import { useRootLoaderData } from './useRootLoaderData';
 import { useStorefront } from './useStorefront';
-import { StoreCart } from '@medusajs/types';
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { FetcherKeys } from '@libs/util/fetcher-keys';
 
 /**
  * Enhanced useCart hook that combines cart data management and drawer state logic

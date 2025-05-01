@@ -1,12 +1,12 @@
-import { useContext } from 'react';
 import {
   StorefrontAction,
   StorefrontActionNames,
   StorefrontContext,
   StorefrontContextValue,
-  ToggleableTargets,
   TogglePayload,
+  ToggleableTargets,
 } from '@app/providers/storefront-provider';
+import { useContext } from 'react';
 
 const toggleActionDispatch: (
   target: ToggleableTargets,

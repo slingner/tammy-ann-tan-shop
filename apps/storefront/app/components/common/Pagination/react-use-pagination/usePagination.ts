@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useReducer } from 'react';
-import { getPaginationMeta, PaginationState, PaginationMeta } from './getPaginationMeta';
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+import { PaginationMeta, PaginationState, getPaginationMeta } from './getPaginationMeta';
 import { paginationStateReducer } from './paginationStateReducer';
 
 type UsePaginationConfig = {

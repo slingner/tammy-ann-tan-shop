@@ -1,5 +1,5 @@
-import type { FC, PropsWithChildren } from 'react';
 import type { CustomPaymentSession } from '@libs/types';
+import type { FC, PropsWithChildren } from 'react';
 import { StripeElementsProvider } from './StripeElementsProvider';
 import { StripePaymentForm } from './StripePaymentForm';
 

@@ -1,8 +1,8 @@
 import { type FC, useMemo } from 'react';
 
 import { getCheapestProductVariant } from '@libs/util/prices';
-import { ProductVariantPrice } from './ProductVariantPrice';
 import { StoreProduct, StoreProductVariant } from '@medusajs/types';
+import { ProductVariantPrice } from './ProductVariantPrice';
 
 export interface ProductPriceProps {
   product: StoreProduct;

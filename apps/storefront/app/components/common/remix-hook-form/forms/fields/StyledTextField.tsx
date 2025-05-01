@@ -1,6 +1,6 @@
 import { TextField } from '@lambdacurry/forms/remix-hook-form';
-import type { ComponentProps } from 'react';
 import clsx from 'clsx';
+import type { ComponentProps } from 'react';
 
 type StyledTextFieldProps = ComponentProps<typeof TextField> & {
   name: string;
@@ -15,7 +15,7 @@ export const StyledTextField = ({ className, name, ...props }: StyledTextFieldPr
         '[&_input:-webkit-autofill]:!transition-[background-color_5000s_ease-in-out_0s]',
         '[&_input:-webkit-autofill]:!shadow-[0_0_0_1000px_white_inset]',
         '[&_label]:text-[16px] [&_label]:text-gray-600',
-        className
+        className,
       )}
       name={name}
     />
