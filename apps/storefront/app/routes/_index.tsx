@@ -18,6 +18,7 @@ export const meta: MetaFunction<typeof loader> = getMergedPageMeta;
 export default function IndexRoute() {
   return (
     <>
+      <link rel="preload" href="/assets/images/barrio-banner.png" as="image" />
       <Hero
         className="h-[800px] !max-w-full -mt-[calc(var(--mkt-header-height)+3rem)] md:-mt-[calc(var(--mkt-header-height-desktop)+2rem)] pt-[var(--mkt-header-height)] md:pt-[var(--mkt-header-height-desktop)]"
         content={

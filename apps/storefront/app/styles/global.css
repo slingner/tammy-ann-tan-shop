@@ -73,14 +73,6 @@
       format('truetype');
   }
 
-  @font-face {
-    font-family: 'Aboreto';
-    font-weight: 400;
-    font-style: normal;
-    src: url(https://fonts.googleapis.com/css2?family=Aboreto&display=swap)
-      format('truetype');
-  }
-
   h1,
   h2,
   h3,
