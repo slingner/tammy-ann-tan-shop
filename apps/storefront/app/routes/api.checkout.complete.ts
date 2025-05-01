@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { addressPayload } from '@libs/util/addresses';
+import { addressPayload, addressToMedusaAddress, medusaAddressToAddress } from '@libs/util/addresses';
 import { removeCartId } from '@libs/util/server/cookies.server';
 import { initiatePaymentSession, placeOrder, retrieveCart, updateCart } from '@libs/util/server/data/cart.server';
 import type { StoreCart } from '@medusajs/types';
@@ -8,30 +8,37 @@ import { redirect, data as remixData } from 'react-router';
 import { getValidatedFormData } from 'remix-hook-form';
 import { z } from 'zod';
 
-export const completeCheckoutSchema = z.object({
-  cartId: z.string(),
-  providerId: z.string(),
-  paymentMethodId: z.string(),
-  sameAsShipping: z.boolean().optional(),
-  billingAddress: z.object({
-    firstName: z.string().min(1, 'First name is required').optional(),
-    lastName: z.string().min(1, 'Last name is required').optional(),
-    company: z.string().optional(),
-    address1: z.string().min(1, 'Address is required').optional(),
-    address2: z.string().optional(),
-    city: z.string().min(1, 'City is required').optional(),
-    province: z.string().min(1, 'Province is required').optional(),
-    countryCode: z.string().min(1, 'Country is required'),
-    postalCode: z.string().min(1, 'Postal code is required'),
-    phone: z.string().optional(),
-  }),
-  noRedirect: z.boolean().optional(),
+const addressSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').optional(),
+  lastName: z.string().min(1, 'Last name is required').optional(),
+  company: z.string().optional(),
+  address1: z.string().min(1, 'Address is required').optional(),
+  address2: z.string().optional(),
+  city: z.string().min(1, 'City is required').optional(),
+  province: z.string().min(1, 'Province is required').optional(),
+  countryCode: z.string().min(1, 'Country is required'),
+  postalCode: z.string().min(1, 'Postal code is required'),
+  phone: z.string().optional(),
 });
+
+export const completeCheckoutSchema = z
+  .object({
+    cartId: z.string(),
+    providerId: z.string(),
+    paymentMethodId: z.string(),
+    sameAsShipping: z.boolean().optional(),
+    billingAddress: z.any(),
+    noRedirect: z.boolean().optional(),
+  })
+  .refine((data) => (data.sameAsShipping ? z.any() : addressSchema.safeParse(data.billingAddress).success), {
+    message: 'Valid billing address is required when creating a new address',
+    path: ['root'],
+  });
 
 export type CompleteCheckoutFormData = z.infer<typeof completeCheckoutSchema>;
 
 export async function action(actionArgs: ActionFunctionArgs) {
-  const { errors, data, receivedValues } = await getValidatedFormData<CompleteCheckoutFormData>(
+  const { errors, data } = await getValidatedFormData<CompleteCheckoutFormData>(
     actionArgs.request,
     zodResolver(completeCheckoutSchema),
   );
@@ -42,15 +49,13 @@ export async function action(actionArgs: ActionFunctionArgs) {
 
   let cart = (await retrieveCart(actionArgs.request)) as StoreCart;
 
-  if (data.sameAsShipping) {
-    const { id, metadata, customer_id, ...billingAddress } = cart.shipping_address as any;
+  const billingAddress = data.sameAsShipping ? cart.shipping_address : addressToMedusaAddress(data.billingAddress);
 
-    cart = (
-      await updateCart(actionArgs.request, {
-        billing_address: addressPayload(billingAddress),
-      })
-    )?.cart;
-  }
+  cart = (
+    await updateCart(actionArgs.request, {
+      billing_address: addressPayload(billingAddress),
+    })
+  )?.cart;
 
   const activePaymentSession = cart.payment_collection?.payment_sessions?.find((ps) => ps.status === 'pending');
 
