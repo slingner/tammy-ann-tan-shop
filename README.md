@@ -1,13 +1,12 @@
 <h1 align="center">
-  <a href="https://barrio.lambdacurry.dev"><img src="https://barrio.lambdacurry.dev/favicon.svg" alt="Medusa 2 Starter with Remix Storefront" width="80" height="80"></a>
+  <a href="https://360training.com"><img src="https://360training.com/favicon.ico" alt="360training E-commerce Platform" width="80" height="80"></a>
   <br>
   <br>
-  Medusa 2 Starter with Remix Storefront
+  360training E-commerce Platform
   <br>
 </h1>
 
-
-This is an official Turborepo monorepo integrating a Medusa2 backend with a Remix frontend. Showcasing a Coffee Roast themed dynamic storefront, it features Stripe payment integration, scalability with unlimited products and categories, and a developer-friendly setup using TypeScript and Biome. Ideal for rapidly building dynamic, scalable e-commerce stores.
+This is a custom e-commerce platform built on Medusa2 backend with a React Router 7 frontend. The platform is designed to provide a seamless learning experience with integrated course purchases, featuring Stripe payment integration, scalable course management, and a developer-friendly setup using TypeScript and Biome. Ideal for managing and selling online training courses and certifications.
 
 https://github.com/user-attachments/assets/3c10d2f5-91b8-405c-a47c-c8ae8a4be575
 
@@ -30,7 +29,6 @@ Before you begin, ensure you have the following installed:
 
 - ✅ Node.js 20+
 - ✅ Yarn 4.5.0
-- ✅ Remix
 - ✅ Docker and Docker Compose
 
 
@@ -38,14 +36,14 @@ Before you begin, ensure you have the following installed:
 
 ### Key Features
 
-- **Dynamic Storefront**: Leverages Medusa2's robust headless commerce capabilities and Remix's fast, data-driven UI for modern e-commerce experiences.
-- **Advanced Payment Integration**: Out-of-the-box support for Stripe enables secure and reliable transaction processing.
-- **Scalability**: Supports unlimited products, collections, categories, and tags, accommodating businesses as they expand their inventory.
+- **Dynamic Course Storefront**: Leverages Medusa2's robust headless commerce capabilities and React Router's fast, data-driven UI for modern e-learning experiences.
+- **Advanced Payment Integration**: Out-of-the-box support for Stripe enables secure and reliable transaction processing for course purchases.
+- **Scalability**: Supports unlimited courses, categories, and certifications, accommodating 360training's extensive course catalog.
 - **Developer Experience**: Built with TypeScript and Biome, enhancing code quality, consistency, and maintainability.
 
 ## Demo
 
-You can view a live demo of the project [here](https://barrio.lambdacurry.dev/).
+The platform is currently under development.
 
 
 ## Getting Started
@@ -61,7 +59,7 @@ You can view a live demo of the project [here](https://barrio.lambdacurry.dev/).
    ```
 
 ## Local Development Setup
-1. Generate `.env` files for both the Medusa backend and the Remix storefront.
+1. Generate `.env` files for both the Medusa backend and the React Router storefront.
    ```
    yarn run generate-env
    ```
@@ -83,7 +81,7 @@ You can view a live demo of the project [here](https://barrio.lambdacurry.dev/).
    yarn dev
    ```
 
-   > This will start both the Medusa backend and the Remix storefront in development mode.
+   > This will start both the Medusa backend and the React Router storefront in development mode.
 
 5. Create a Publishable API Key for your storefront:
 
@@ -119,24 +117,19 @@ To enable Express Checkout in the Medusa Storefront, follow these steps:
 2. Create your own [domain association file](https://docs.stripe.com/apple-pay?platform=web#verify-domain) to verify your domain, and replace the content in the `apps/storefront/app/routes/[.well-known].apple-developer-merchantid-domain-association.tsx` file with your own domain association file content.
 
 3. Register your domain for payment methods - see [this stripe guide](https://docs.stripe.com/payments/payment-methods/pmd-registration) for more information.
-   -  for development, you may want to use a service like [ngrok](https://ngrok.com).
-   -  for production, a domain with `https` is required.
-
-
-
-
+   - for development, you may want to use a service like [ngrok](https://ngrok.com).
+   - for production, a domain with `https` is required.
 
 
 ## Useful Links
 
 - [Medusa Documentation](https://docs.medusajs.com/)
-- [Remix Documentation](https://remix.run/docs/en/main)
+- [React Router Documentation](https://reactrouter.com/home)
 - [Turborepo Documentation](https://turbo.build/repo/docs)
- - [Stripe Express Checkout](https://docs.stripe.com/elements/express-checkout-element)
+- [Stripe Express Checkout](https://docs.stripe.com/elements/express-checkout-element)
 
 
-## Contributors
-Made with ❤️ by the Lambda Curry team.
+
 
 
 <a href = "https://github.com/lambda-curry/medusa2-starter/graphs/contributors">
