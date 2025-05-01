@@ -1,6 +1,5 @@
 import type { MetaDescriptor, MetaFunction } from 'react-router';
 import { UIMatch } from 'react-router';
-import { MetaMatch } from '@react-router/react/dist/routeModules';
 import type { RootLoaderResponse } from './server/root.server';
 
 const filterEmptyMeta = (meta: MetaDescriptor[]) =>
@@ -44,7 +43,7 @@ export const mergeMeta =
   (...overrideFuncs: MetaFunction[]): MetaFunction =>
   (arg) =>
     overrideFuncs.reduce(
-      (acc: MetaDescriptor[], override: MetaFunction) => mergeMetaArrays(acc, override(arg)),
+      (acc: MetaDescriptor[], override: MetaFunction) => mergeMetaArrays(acc, override(arg) ?? []),
       [] as MetaDescriptor[],
     );
 
@@ -52,14 +51,14 @@ export const mergeMeta =
  * Gets the merged meta from the parent routes.
  */
 export const getParentMeta: MetaFunction = ({ matches }) =>
-  matches.reduce((acc, match: MetaMatch) => mergeMetaArrays(acc, match.meta || []), [] as MetaDescriptor[]);
+  matches.reduce((acc, match: Record<string, any>) => mergeMetaArrays(acc, match.meta || []), [] as MetaDescriptor[]);
 
 /**
  * Gets the common meta most routes will use.
  */
 export const getCommonMeta: MetaFunction = ({ matches }) => {
   const rootMatch = matches[0] as UIMatch<RootLoaderResponse>;
-  const currentMatch: MetaMatch = matches?.[matches?.length - 1];
+  const currentMatch = matches?.[matches?.length - 1];
 
   const siteDetails = rootMatch.data?.siteDetails;
 

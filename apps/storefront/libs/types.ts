@@ -101,7 +101,6 @@ export interface Address {
   countryCode: string;
   postalCode: string;
   phone?: string;
-  country?: string;
 }
 
 export type MedusaAddress = Omit<BaseAddress, 'id' | 'customer_id'>;

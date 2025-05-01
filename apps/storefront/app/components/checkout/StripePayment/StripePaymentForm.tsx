@@ -4,11 +4,11 @@ import { PaymentMethodCreateParams, StripePaymentElement } from '@stripe/stripe-
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import clsx from 'clsx';
 import type { CustomPaymentSession, Address, MedusaAddress } from '@libs/types';
-import { UpdatePaymentInput } from '@app/routes/api.checkout';
 import { CompleteCheckoutForm } from '../CompleteCheckoutForm';
 import { Alert } from '@app/components/common/alert/Alert';
 import { useCheckout } from '@app/hooks/useCheckout';
 import { medusaAddressToAddress } from '@libs/util';
+import { CompleteCheckoutFormData } from '@app/routes/api.checkout.complete';
 
 export interface StripePaymentFormProps extends PropsWithChildren {
   isActiveStep: boolean;
@@ -42,7 +42,7 @@ export const StripePaymentForm: FC<StripePaymentFormProps> = ({ isActiveStep, pa
   if (!cart || !stripe || !elements) return null;
 
   const handleSubmit = async (
-    data: UpdatePaymentInput,
+    data: CompleteCheckoutFormData,
     event: FormEvent<HTMLFormElement>,
     {
       setSubmitting,

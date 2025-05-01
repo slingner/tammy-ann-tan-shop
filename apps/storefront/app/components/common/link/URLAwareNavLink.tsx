@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router';
-import { RemixNavLinkProps } from '@react-router/react/dist/components';
+import { NavLinkProps } from 'react-router';
 import { FC, HTMLAttributes, PropsWithChildren } from 'react';
 
 export interface AwareNavLinkProps {
   url: string;
   newTab?: boolean;
-  prefetch?: RemixNavLinkProps['prefetch'];
-  preventScrollReset?: RemixNavLinkProps['preventScrollReset'];
+  prefetch?: NavLinkProps['prefetch'];
+  preventScrollReset?: NavLinkProps['preventScrollReset'];
   className?: string | ((props: { isActive: boolean }) => string | undefined);
 }
 

@@ -81,13 +81,11 @@ export const ProductOptionSelectorSelect: FC<ProductOptionSelectorProps> = ({
         id={option.id}
         className="form-select"
         defaultValue={value}
-        onChange={handleChange}
+        // onChange={handleChange}
       >
         {formattedOptions.map((optValue, valueIndex) => (
-          <option key={valueIndex} value={optValue.value} disabled={optValue.disabled}>
-            {optValue.disabled
-              ? `${optValue.label || optValue.value} (not available)`
-              : optValue.label || optValue.value}
+          <option key={valueIndex} value={optValue.value}>
+            {optValue.label || optValue.value}
           </option>
         ))}
       </select>

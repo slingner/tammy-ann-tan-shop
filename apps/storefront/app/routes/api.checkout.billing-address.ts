@@ -11,15 +11,14 @@ export const billingAddressSchema = z.object({
   billingAddress: z.object({
     firstName: z.string().min(1, 'First name is required'),
     lastName: z.string().min(1, 'Last name is required'),
-    company: z.string().optional().nullable(),
+    company: z.string().optional(),
     address1: z.string().min(1, 'Address is required'),
-    address2: z.string().optional().nullable(),
+    address2: z.string().optional(),
     city: z.string().min(1, 'City is required'),
     province: z.string().min(1, 'Province is required'),
     countryCode: z.string().min(1, 'Country is required'),
     postalCode: z.string().min(1, 'Postal code is required'),
-    phone: z.string().optional().nullable(),
-    country: z.string().optional().nullable(),
+    phone: z.string().optional(),
   }),
 });
 

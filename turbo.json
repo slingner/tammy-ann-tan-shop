@@ -22,6 +22,8 @@
     },
     "medusa:init": {
       "cache": false
+    },
+    "typecheck": {
     }
   }
 }
