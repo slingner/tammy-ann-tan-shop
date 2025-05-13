@@ -22,7 +22,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     await retrieveRegion(regionId);
 
-    const headers = new Headers();
+    const headers = new Headers(request.headers);
 
     await setSelectedRegionId(headers, regionId);
 
