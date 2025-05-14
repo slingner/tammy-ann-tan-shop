@@ -22,11 +22,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     await retrieveRegion(regionId);
 
-    const headers = new Headers(request.headers);
+    const headers = new Headers();
 
     await setSelectedRegionId(headers, regionId);
 
-    const cartId = await getCartId(headers);
+    const cartId = await getCartId(request.headers);
 
     if (cartId) await updateCart(request, { region_id: regionId });
 
