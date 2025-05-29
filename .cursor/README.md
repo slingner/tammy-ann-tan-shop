@@ -15,14 +15,26 @@ This directory contains comprehensive Cursor rules designed to enhance AI-assist
 - Security and validation best practices
 - Performance optimization techniques
 
-#### `remix-storefront.mdc`
-**Comprehensive rules for React Router v7 (Remix) storefront development**
+#### Remix Storefront Rules (Split for Better Organization)
+
+**`remix-storefront-routing.mdc`**
 - React Router v7 patterns and conventions
+- Route structure and loader/action patterns
 - Medusa SDK integration
 - Form handling with @lambdacurry/forms
-- Component patterns and styling with Tailwind CSS
+- API integration patterns
+
+**`remix-storefront-components.mdc`**
+- Component patterns and architecture
+- Styling with Tailwind CSS
+- Responsive design principles
+- Reusable component patterns
+
+**`remix-storefront-optimization.mdc`**
+- Performance optimization and caching strategies
 - SEO optimization and meta tag management
-- Performance optimization and accessibility
+- Error handling and accessibility
+- Testing patterns for components
 
 #### `typescript-patterns.mdc`
 **Advanced TypeScript patterns and best practices**
@@ -33,11 +45,22 @@ This directory contains comprehensive Cursor rules designed to enhance AI-assist
 - Functional programming concepts
 - Testing type definitions
 
-#### `testing-patterns.mdc`
-**Comprehensive testing strategies for Medusa applications**
+#### Testing Rules (Split by Testing Type)
+
+**`testing-patterns-unit.mdc`**
 - Unit testing for services and components
+- Service layer testing patterns
+- React component testing
+- Hook testing patterns
+
+**`testing-patterns-integration.mdc`**
 - Integration testing for APIs and databases
+- Workflow testing
+- Database integration patterns
+
+**`testing-patterns-e2e.mdc`**
 - End-to-end testing with Playwright
+- Storefront user journey testing
 - Test utilities and factories
 - Mocking strategies and best practices
 
@@ -66,9 +89,13 @@ These rules are automatically applied based on file patterns:
 | Rule File | Target Files |
 |-----------|-------------|
 | `medusa-development.mdc` | `apps/medusa/**/*.ts`, `apps/medusa/**/*.tsx` |
-| `remix-storefront.mdc` | `apps/storefront/**/*.ts`, `apps/storefront/**/*.tsx` |
+| `remix-storefront-routing.mdc` | `apps/storefront/**/*.ts`, `apps/storefront/**/*.tsx` |
+| `remix-storefront-components.mdc` | `apps/storefront/**/*.ts`, `apps/storefront/**/*.tsx` |
+| `remix-storefront-optimization.mdc` | `apps/storefront/**/*.ts`, `apps/storefront/**/*.tsx` |
 | `typescript-patterns.mdc` | `**/*.ts`, `**/*.tsx` |
-| `testing-patterns.mdc` | `**/*.test.ts`, `**/*.spec.ts`, `**/__tests__/**/*` |
+| `testing-patterns-unit.mdc` | `**/*.test.ts`, `**/*.spec.ts`, `**/__tests__/**/*` |
+| `testing-patterns-integration.mdc` | `**/*.test.ts`, `**/*.spec.ts`, `**/__tests__/**/*` |
+| `testing-patterns-e2e.mdc` | `**/*.test.ts`, `**/*.spec.ts`, `**/__tests__/**/*` |
 | `remix-hook-form-migration.mdc` | All TypeScript files (migration context) |
 
 ## 🎯 Key Features
@@ -140,7 +167,7 @@ describe("UserService", () => {
   it("should create a new user with valid data", async () => {
     // Arrange, Act, Assert pattern
   })
-})
+}
 ```
 
 ## 📚 Best Practices Enforced
@@ -245,4 +272,3 @@ Each rule file contains extensive code examples demonstrating:
 ---
 
 These Cursor rules are designed to accelerate development while maintaining code quality and consistency across the Medusa application. They serve as an intelligent coding assistant, providing contextual guidance based on the specific file and framework being used.
-
