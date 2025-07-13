@@ -1,19 +1,24 @@
-import type { SiteDetailsRootData } from '@libs/types';
+import type { SiteDetailsRootData } from "@libs/types";
 
-import { footerNavigationItems, headerNavigationItems } from '@libs/config/site/navigation-items';
-import { siteSettings } from '@libs/config/site/site-settings';
-import type { HttpTypes } from '@medusajs/types';
-import { type LoaderFunctionArgs, data as remixData } from 'react-router';
-import { RemixLoaderResponse } from 'types/remix';
-import { config } from './config.server';
-import { getSelectedRegionId, setSelectedRegionId } from './cookies.server';
-import { enrichLineItems, retrieveCart } from './data/cart.server';
-import { getCustomer } from './data/customer.server';
-import { getSelectedRegion, listRegions } from './data/regions.server';
-import { fetchProducts } from './products.server';
+import {
+  footerNavigationItems,
+  headerNavigationItems,
+} from "@libs/config/site/navigation-items";
+import { siteSettings } from "@libs/config/site/site-settings";
+import type { HttpTypes } from "@medusajs/types";
+import { type LoaderFunctionArgs, data as remixData } from "react-router";
+import { RemixLoaderResponse } from "types/remix";
+import { config } from "./config.server";
+import { getSelectedRegionId, setSelectedRegionId } from "./cookies.server";
+import { enrichLineItems, retrieveCart } from "./data/cart.server";
+import { getCustomer } from "./data/customer.server";
+import { getSelectedRegion, listRegions } from "./data/regions.server";
+import { fetchProducts } from "./products.server";
 
 const fetchHasProducts = async (request: Request) => {
-  return await fetchProducts(request, { limit: 1, offset: 999_999 }).then((res) => res.count > 0);
+  return await fetchProducts(request, { limit: 1, offset: 999_999 }).then(
+    (res) => res.count > 0
+  );
 };
 
 export const getRootLoader = async ({ request }: LoaderFunctionArgs) => {
@@ -60,7 +65,7 @@ export const getRootLoader = async ({ request }: LoaderFunctionArgs) => {
       region,
       siteDetails: {
         store: {
-          name: 'BARRIO',
+          name: "TAMMY ANN TAN",
         },
         settings: siteSettings,
         headerNavigationItems,
@@ -68,10 +73,12 @@ export const getRootLoader = async ({ request }: LoaderFunctionArgs) => {
       } as SiteDetailsRootData,
       cart: cart,
     },
-    { headers },
+    { headers }
   );
 };
 
 export type RootLoader = typeof getRootLoader;
 
-export type RootLoaderResponse = RemixLoaderResponse<typeof getRootLoader>['data'];
+export type RootLoaderResponse = RemixLoaderResponse<
+  typeof getRootLoader
+>["data"];

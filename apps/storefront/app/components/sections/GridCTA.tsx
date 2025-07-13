@@ -39,7 +39,7 @@ export const GridCTA = ({ content, className, images }: GridCTAProps) => {
     <Container className={clsx('flex flex-col md:flex-row min-h-[610px] gap-5 w-full', className)}>
       <SideColumn images={firstHalf} />
       {content && (
-        <div className="flex flex-col flex-1 justify-center items-center bg-accent-50 text-white text-center p-5">
+        <div className="flex flex-col flex-1 justify-center items-center bg-primary-500 text-white text-center p-5">
           {content}
         </div>
       )}

@@ -59,7 +59,7 @@ export default function ProductDetailRoute() {
         reviewStats={productReviewStats.product_review_stats[0]}
       />
       <ProductList className="!pb-[100px] xl:px-9" heading="You may also like" />
-      <ProductReviewSection />
+      {/* <ProductReviewSection /> */}
     </>
   );
 }

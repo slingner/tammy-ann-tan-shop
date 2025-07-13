@@ -345,7 +345,7 @@ export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductT
                             </header>
                           </div>
 
-                          <ProductReviewStars reviewsCount={reviewsCount} reviewStats={reviewStats} />
+                          {/* <ProductReviewStars reviewsCount={reviewsCount} reviewStats={reviewStats} /> */}
 
                           <section aria-labelledby="product-information" className="mt-4">
                             <h2 id="product-information" className="sr-only">
@@ -427,7 +427,7 @@ export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductT
                                 </div>
                               </div>
                             )}
-
+{/*
                             {product.categories && product.categories.length > 0 && (
                               <nav aria-label="Categories" className="mt-4">
                                 <h3 className="mb-2">Categories</h3>
@@ -463,7 +463,7 @@ export const ProductTemplate = ({ product, reviewsCount, reviewStats }: ProductT
                                   ))}
                                 </ol>
                               </nav>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       </GridColumn>
