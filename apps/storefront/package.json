@@ -2,7 +2,7 @@
   "name": "storefront",
   "version": "0.0.1",
   "description": "Starter Storefront",
-  "author": "Lambda Curry <team@lambdacurry.dev>",
+  "author": "Scott Lingner",
   "license": "UNLICENSED",
   "private": true,
   "type": "module",
