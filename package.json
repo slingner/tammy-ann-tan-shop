@@ -23,7 +23,8 @@
   },
   "resolutions": {
     "@medusajs/js-sdk": "2.7.0",
-    "@medusajs/types": "2.7.0"
+    "@medusajs/types": "2.7.0",
+    "isbot": "4.4.0"
   },
   "packageManager": "yarn@4.5.0",
   "workspaces": [
