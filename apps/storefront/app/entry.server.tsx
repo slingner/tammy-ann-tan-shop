@@ -1,11 +1,11 @@
 import { PassThrough } from "stream";
 import { createReadableStreamFromReadable } from "@react-router/node";
 import * as Sentry from "@sentry/remix";
-import isbotImport from "isbot";
+import {isbot} from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { EntryContext, ServerRouter } from "react-router";
 
-const isbot = isbotImport as unknown as (ua: string) => boolean;
+
 
 if (process.env.SENTRY_DSN)
   Sentry.init({
@@ -27,8 +27,8 @@ export default function handleRequest(
   ]
 ) {
   return isbot(props[0].headers.get("user-agent") ?? "")
-    ? handleBotRequest(...props)
-    : handleBrowserRequest(...props);
+  ? handleBotRequest(...props)
+  : handleBrowserRequest(...props);
 }
 
 function handleBotRequest(
