@@ -58,9 +58,9 @@ primary_region = "sjc"        # Replace with your preferred region (e.g., "ord",
   cpus = 1
   memory = "1gb"
 
-# Deploy configuration
-[deploy]
-  release_command = "npm run build"  # Adjust based on your build command
+# Deploy configuration (migrations can be run manually first)
+# [deploy]
+#   release_command = "npx medusa migrations run"
 
 # Optional: Mount for persistent storage (needed for file uploads)
 [[mounts]]
