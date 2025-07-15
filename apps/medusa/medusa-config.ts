@@ -53,10 +53,10 @@ module.exports = defineConfig({
     },
   },
   plugins: [
-    {
-      resolve: '@lambdacurry/medusa-product-reviews',
-      options: {},
-    },
+    // {
+    //   resolve: '@lambdacurry/medusa-product-reviews',
+    //   options: {},
+    // },
   ],
   modules: [
     {

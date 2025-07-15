@@ -1,0 +1,68 @@
+# fly.toml app configuration file for Medusa backend
+# Place this file in your repository root (same level as apps/ folder)
+
+app = "tammy-ann-tan-shop"  # Replace with your desired app name
+primary_region = "sjc"        # Replace with your preferred region (e.g., "ord", "fra", "syd")
+
+# Build configuration for monorepo
+[build]
+  # Set the build context to the medusa app directory
+  dockerfile = "./apps/medusa/Dockerfile"
+
+# Or if you don't have a Dockerfile, use buildpacks with working directory
+# [build]
+#   buildpacks = ["ghcr.io/railwayapp/nixpacks:latest"]
+#   builder = "paketobuildpacks/builder:base"
+
+[env]
+  # Medusa typically runs on port 9000, but we'll use 8080 for Fly.io
+  PORT = "8080"
+  NODE_ENV = "production"
+  DATABASE_TYPE = "postgres"
+
+  # Non-sensitive environment variables
+  REDIS_URL = "redis://localhost:6379"  # If you use Redis
+
+  # All sensitive variables are set as secrets via CLI:
+  # DATABASE_URL (set via fly secrets)
+  # STRIPE_API_KEY (set via fly secrets)
+  # JWT_SECRET (set via fly secrets)
+  # COOKIE_SECRET (set via fly secrets)
+
+[experimental]
+  # Enable auto-stopping machines to save costs
+  auto_rollback = true
+
+# HTTP service configuration
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  # Health check for Medusa
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    path = "/health"
+    protocol = "http"
+    timeout = "5s"
+    tls_skip_verify = false
+
+# Resource allocation
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory = "1gb"
+
+# Deploy configuration
+[deploy]
+  release_command = "npm run build"  # Adjust based on your build command
+
+# Optional: Mount for persistent storage (needed for file uploads)
+[[mounts]]
+  source = "medusa_data"
+  destination = "/app/uploads"

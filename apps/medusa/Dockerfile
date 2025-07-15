@@ -17,13 +17,12 @@ COPY --from=builder /app/out/yarn.lock yarn.lock
 COPY --from=builder /app/.yarnrc.yml .yarnrc.yml
 COPY --from=builder /app/.yarn .yarn
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 COPY --from=builder /app/out/full/ .
 
 RUN yarn turbo build --filter=medusa && \
     rm -rf node_modules/.cache .yarn/cache
-
 
 FROM base AS runner
 
@@ -39,6 +38,8 @@ USER 1000
 
 WORKDIR /app/server
 
-ENV PORT=80
+# Change port to match fly.toml
+ENV PORT=8080
 
-CMD ["yarn", "start:prod"]
+# Use the standard medusa start command
+CMD ["yarn", "start"]
